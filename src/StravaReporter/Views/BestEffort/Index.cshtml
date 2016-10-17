@@ -1,0 +1,52 @@
+﻿@using StravaReporter.Models.Strava;
+@model Activity
+
+@{
+    ViewData["Title"] = "Best effort";
+}
+
+<div class="container">
+
+    <h2><a href="@string.Format(Constants.BaseUrl + Constants.ActivityUrl, Model.Id)" target="_blank" nofollow>@Model.Name</a></h2>
+    <p class="lead">
+        @Model.StartDate.ToString()
+        @Model.Description
+    </p>
+
+    <hr />
+
+    <div class="method">
+        <div class="row margin-0 list-header">
+            <div class="col-xs-2"><div class="header">Distance</div></div>
+            <div class="col-xs-2"><div class="header">Time (seconds)</div></div>
+            <div class="col-xs-2"><div class="header">Time (hour/minutes/seconds)</div></div>
+        </div>
+
+        @foreach (var item in Model?.BestEfforts)
+        {
+            <div class="row margin-0">
+                <div class="col-xs-2">
+                    <div class="cell">
+                        <div class="propertyname">
+                            @item.Distance
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="cell">
+                        <div class="type">
+                            <code>@item.ElapsedTime</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-2">
+                    <div class="cell">
+                        <div class="type">
+                            <code>@TimeSpan.FromSeconds(item.ElapsedTime).ToString()</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
