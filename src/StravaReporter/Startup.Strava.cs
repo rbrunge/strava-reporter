@@ -53,6 +53,11 @@ namespace StravaReporter
             }
         }
 
+        /// <summary>
+        /// Creates tickets and add claims. Claims are "fetched" via signin later.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private static async Task CreatingStravaAuthTicket(OAuthCreatingTicketContext context)
         {
             // Get the GitHub user
@@ -64,7 +69,7 @@ namespace StravaReporter
             response.EnsureSuccessStatusCode();
 
             var user = JObject.Parse(await response.Content.ReadAsStringAsync());
-            context.Identity.AddClaim(new Claim("urn:strava:accesstoken", context.AccessToken));
+            context.Identity.AddClaim(new Claim(Models.Strava.Constants.AccessToken, context.AccessToken));
             var identifier = user.Value<string>("id");
             if (!string.IsNullOrEmpty(identifier))
             {

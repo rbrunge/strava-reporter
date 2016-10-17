@@ -9,23 +9,21 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace StravaReporter.Controllers
 {
-    [Authorize]
-    public class BestEffortController : Controller
+    [AllowAnonymous]
+    public class WelcomeController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
 
-        public BestEffortController(UserManager<ApplicationUser> userManager, ILoggerFactory loggerFactory)
+        public WelcomeController(UserManager<ApplicationUser> userManager, ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
             _logger = loggerFactory.CreateLogger<ManageController>();
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var token = User.Claims.FirstOrDefault(n => n.Type == Constants.AccessToken).Value;
-            var activity = await Activity.GetLatestAsync(token);
-            return View(activity);
+            return View();
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using StravaReporter.Models;
 using StravaReporter.Models.AccountViewModels;
 using StravaReporter.Services;
+using StravaReporter.Models.Strava;
 
 namespace StravaReporter.Controllers
 {
@@ -134,7 +135,7 @@ namespace StravaReporter.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(WelcomeController.Index), "Welcome");
         }
 
         //
@@ -200,7 +201,7 @@ namespace StravaReporter.Controllers
                         if (userResult.Succeeded)
                         {
                             await _userManager.AddClaimAsync(user, 
-                                new Claim("urn:strava:accesstoken", info.AuthenticationTokens.FirstOrDefault(n => n.Name == "access_token").Value));
+                                new Claim(Constants.AccessToken, info.AuthenticationTokens.FirstOrDefault(n => n.Name == "access_token").Value));
                             await _signInManager.SignInAsync(user, isPersistent: false);
                             _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
                             return RedirectToLocal(returnUrl);
@@ -480,7 +481,7 @@ namespace StravaReporter.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(WelcomeController.Index), "Welcome");
             }
         }
 

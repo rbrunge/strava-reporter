@@ -10,7 +10,7 @@
 
 <h2>@ViewData["Title"].</h2>
 <div class="row">
-    <div class="col-md-8">
+    @*<div class="col-md-8">
         <section>
             <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
                 <h4>Use a local account to log in.</h4>
@@ -53,10 +53,10 @@
                 </p>
             </form>
         </section>
-    </div>
-    <div class="col-md-4">
+    </div>*@
+    <div class="col-md-12">
         <section>
-            <h4>Use another service to log in.</h4>
+            @*<h4>Log in with Strava</h4>*@
             <hr />
             @{
                 var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
@@ -76,7 +76,12 @@
                             <p>
                                 @foreach (var provider in loginProviders)
                                 {
-                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
+                                    if (provider.AuthenticationScheme.ToLowerInvariant() == "strava")
+                                    {
+                                        <button type="submit" class="image-button" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">
+                                            <img src="~/images/btn_strava_connectwith_orange.svg" alt="Strava login" title="Log in using your @provider.DisplayName account">
+                                        </button>
+                                    }
                                 }
                             </p>
                         </div>

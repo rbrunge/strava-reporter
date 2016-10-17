@@ -513,7 +513,7 @@ namespace StravaReporter.Models.Strava
 
     public class Activity : ActivitySummary
     {
-        public static async Task<Activity> GetLatest(string accessToken)
+        public static async Task<Activity> GetLatestAsync(string accessToken)
         {
             Activity activity = null;
             using (var client = new HttpClient())
