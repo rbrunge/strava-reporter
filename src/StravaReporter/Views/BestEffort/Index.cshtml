@@ -5,12 +5,12 @@
     ViewData["Title"] = "Best effort";
 }
 
-<div class="container">
+<td class="container">
 
     <div class="alert alert-info">
         Showing best running efforts for latest run.
     </div>
-    <h2><a href="@string.Format(Constants.BaseUrl + Constants.ActivityUrl, Model.Id)" target="_blank" nofollow>@Model.Name</a></h2>
+    <h2><a href="@string.Format(Constants.WebBaseUrl + Constants.ActivityUrl, Model.Id)" target="_blank" nofollow>@Model.Name</a></h2>
     <p class="lead">
         @Model.StartDate.ToString()
         @Model.Description
@@ -18,38 +18,68 @@
 
     <hr />
 
-    <div class="method">
-        <div class="row margin-0 list-header">
-            <div class="col-xs-2"><div class="header">Distance</div></div>
-            <div class="col-xs-2"><div class="header">Time (seconds)</div></div>
-            <div class="col-xs-2"><div class="header">Time (hour/minutes/seconds)</div></div>
-        </div>
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <h3>Best efforts</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th class="text-right">Distance (meters)</th>
+                        <th class="text-right">Duration (hh:min:sec)</th>
+                        <th class="text-right">Pace (min/km)</th>
+                        <th class="text-right">Rank</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-        @foreach (var item in Model?.BestEfforts)
-        {
-            <div class="row margin-0">
-                <div class="col-xs-2">
-                    <div class="cell">
-                        <div class="propertyname">
-                            @item.Distance
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-2">
-                    <div class="cell">
-                        <div class="type">
-                            <code>@item.ElapsedTime</code>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-2">
-                    <div class="cell">
-                        <div class="type">
-                            <code>@TimeSpan.FromSeconds(item.ElapsedTime).ToString()</code>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
+                    @foreach (var item in Model?.BestEfforts)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td class="text-right">@item.Distance</td>
+                            <td class="text-right">@TimeSpan.FromSeconds(item.MovingTime).ToString(item.MovingTime < 3600 ? @"mm\:ss" : @"hh\:mm\:ss")</td>
+                            <td class="text-right">@TimeSpan.FromSeconds(1000 / (item.Distance / item.MovingTime)).ToString(@"mm\:ss")</td>
+                            <td class="text-right">@item.PrRank</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
+    <div class="clearfix"></div>
+    @if (Model.SegmentEfforts != null && Model.SegmentEfforts.Any(starred => starred.Segment.Starred))
+    {
+        <hr />
+        <div class="table-responsive">
+            <h3>Starred segments</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Segment name</th>
+                        <th class="text-right">PR Rank</th>
+                        <th class="text-right">Distance</th>
+                        <th class="text-right">Time</th>
+                        <th class="text-right">Pace (min/km)</th>
+                        <th class="text-right">Heartrate</th>
+                        <th class="text-right">Cadence</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var segment in Model?.SegmentEfforts.Where(starred => starred.Segment.Starred))
+                    {
+                        <tr>
+                            <td>@segment.Name</td>
+                            <td class="text-right">@segment.PrRank</td>
+                            <td class="text-right">@Math.Round(segment.Distance / 1000, 1).ToString("N1")</td>
+                            <td class="text-right">@TimeSpan.FromSeconds(segment.MovingTime).ToString(@"mm\:ss")</td>
+                            <td class="text-right">@TimeSpan.FromSeconds(1000 / (segment.Distance / segment.MovingTime)).ToString(@"mm\:ss")</td>
+                            <td class="text-right">@Math.Round(segment.AverageHeartrate, 0)</td>
+                            <td class="text-right">@Math.Round(segment.AverageCadence, 0)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    </div>

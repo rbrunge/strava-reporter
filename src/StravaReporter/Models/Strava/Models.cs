@@ -271,8 +271,8 @@ namespace StravaReporter.Models.Strava
         [JsonProperty("activity")]
         public Activity Activity { get; set; }
 
-        //[JsonProperty("athlete")]
-        //public Athlete { get; set; }
+        [JsonProperty("athlete")]
+        public Athlete Athlete { get; set; }
 
         [JsonProperty("elapsed_time")]
         public double ElapsedTime { get; set; }
@@ -518,7 +518,7 @@ namespace StravaReporter.Models.Strava
             Activity activity = null;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = Constants.BaseUrl;
+                client.BaseAddress = Constants.ApiBaseUrl;
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
                 var latestJson = await client.GetStringAsync(Constants.ActivityLastestSummaryUrl);
                 var latest = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<ActivitySummary>>(latestJson));
