@@ -9,6 +9,8 @@ using StravaReporter.Data;
 using StravaReporter.Models;
 using StravaReporter.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace StravaReporter
 {
@@ -57,6 +59,11 @@ namespace StravaReporter
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<IAccessTokenProvider, HttpContextAccessTokenProvider>();
+            services.AddTransient<IStravaConnector, StravaConnector>();
+            services.AddTransient<IStravaManager, StravaManager>();
+            services.AddTransient<ClaimsPrincipal>(
+                    s => s.GetService<IHttpContextAccessor>().HttpContext.User); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,7 +97,7 @@ namespace StravaReporter
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=BestEffort}/{action=Index}/{id?}");
+                    template: "{controller=Activity}/{action=Index}/{id?}");
             });
         }
     }

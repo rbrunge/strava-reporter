@@ -27,15 +27,18 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="BestEffort" asp-action="Index" class="navbar-brand">StravaReporter</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Welcome" asp-action="Index">Welcome</a></li>
-                </ul>
-                @await Html.PartialAsync("_LoginPartial")
-            </div>
+                <a asp-area="" asp-controller="Activity" asp-action="Index" class="navbar-brand">
+                    <div><img height="30" src="~/images/api_logo_pwrdBy_strava_stack_light.png" alt="strava logo" />Reporter</div>
+                </a>
+            
         </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a asp-area="" asp-controller="Welcome" asp-action="Index">Welcome</a></li>
+            </ul>
+            @await Html.PartialAsync("_LoginPartial")
+        </div>
+    </div>
     </div>
     <div class="container body-content">
         @RenderBody()

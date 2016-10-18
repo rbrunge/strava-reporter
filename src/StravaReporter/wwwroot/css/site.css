@@ -55,3 +55,14 @@ textarea {
    border: none !important;
    background-color: transparent !important;
 }
+.status {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+.status .panel-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 45px;
+    padding-top: 20px;
+    letter-spacing: -0.8px;
+}

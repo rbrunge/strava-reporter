@@ -513,21 +513,6 @@ namespace StravaReporter.Models.Strava
 
     public class Activity : ActivitySummary
     {
-        public static async Task<Activity> GetLatestAsync(string accessToken)
-        {
-            Activity activity = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = Constants.ApiBaseUrl;
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
-                var latestJson = await client.GetStringAsync(Constants.ActivityLastestSummaryUrl);
-                var latest = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<ActivitySummary>>(latestJson));
-                var json = await client.GetStringAsync(string.Format(Constants.ActivityUrl, latest.FirstOrDefault().Id));
-                activity = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<Activity>(json));
-            }
-            return activity;
-        }
-
         [JsonProperty("description")]
         public string Description { get; set; }
 
@@ -564,4 +549,65 @@ namespace StravaReporter.Models.Strava
         [JsonProperty("embed_token")]
         public string EmbedToken { get; set; }
     }
+
+    public class Lap
+    {
+        [JsonProperty("id")]
+        public object Id { get; set; }
+
+        [JsonProperty("resource_state")]
+        public int ResourceState { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("activity")]
+        public Activity Activity { get; set; }
+
+        [JsonProperty("athlete")]
+        public Athlete Athlete { get; set; }
+
+        [JsonProperty("elapsed_time")]
+        public int ElapsedTime { get; set; }
+
+        [JsonProperty("moving_time")]
+        public int MovingTime { get; set; }
+
+        [JsonProperty("start_date")]
+        public DateTime StartDate { get; set; }
+
+        [JsonProperty("start_date_local")]
+        public DateTime StartDateLocal { get; set; }
+
+        [JsonProperty("distance")]
+        public double Distance { get; set; }
+
+        [JsonProperty("start_index")]
+        public int StartIndex { get; set; }
+
+        [JsonProperty("end_index")]
+        public int EndIndex { get; set; }
+
+        [JsonProperty("total_elevation_gain")]
+        public double TotalElevationGain { get; set; }
+
+        [JsonProperty("average_speed")]
+        public double AverageSpeed { get; set; }
+
+        [JsonProperty("max_speed")]
+        public double MaxSpeed { get; set; }
+
+        [JsonProperty("average_cadence")]
+        public double AverageCadence { get; set; }
+
+        [JsonProperty("average_heartrate")]
+        public double AverageHeartrate { get; set; }
+
+        [JsonProperty("max_heartrate")]
+        public double MaxHeartrate { get; set; }
+
+        [JsonProperty("lap_index")]
+        public int LapIndex { get; set; }
+    }
+
 }
