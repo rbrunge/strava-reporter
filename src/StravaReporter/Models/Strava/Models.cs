@@ -154,7 +154,7 @@ namespace StravaReporter.Models.Strava
         public bool HasKudoed { get; set; }
 
         [JsonProperty("workout_type")]
-        public int WorkoutType { get; set; }
+        public int? WorkoutType { get; set; }
     }
 
     public class Map
