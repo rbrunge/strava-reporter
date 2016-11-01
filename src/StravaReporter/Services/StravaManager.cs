@@ -22,9 +22,9 @@ namespace StravaReporter.Services
         {
             Activity activity = null;
 
-            var latestJson = await _stravaConnector.GetDataAsync(Constants.ActivityLastestSummaryUrl);
+            var latestJson = await _stravaConnector.GetDataAsync(Constants.ActivityLastestSummaryPartUrl);
             var latest = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<ActivitySummary>>(latestJson));
-            var json = await _stravaConnector.GetDataAsync(string.Format(Constants.ActivityUrl, latest.FirstOrDefault().Id));
+            var json = await _stravaConnector.GetDataAsync(string.Format(Constants.ActivityPartUrl, latest.FirstOrDefault().Id));
             activity = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<Activity>(json));
 
             return activity;
@@ -33,7 +33,7 @@ namespace StravaReporter.Services
         {
             IEnumerable<Lap> laps;
 
-            var json = await _stravaConnector.GetDataAsync(string.Format(Constants.LapsUrl, activityId));
+            var json = await _stravaConnector.GetDataAsync(string.Format(Constants.LapsPartUrl, activityId));
             laps = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<Lap>>(json));
 
             return laps;

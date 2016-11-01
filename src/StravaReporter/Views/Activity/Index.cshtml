@@ -11,7 +11,10 @@
     {
         return TimeSpan.FromSeconds(1000 / (distance / time)).ToString(@"mm\:ss");
     }
-
+    string FormattedCadence(double cadence)
+    {
+        return (cadence < 125 ? cadence * 2 : cadence).ToString("N0");
+    }
     string FormattedTime(double time)
     {
         return TimeSpan.FromSeconds(time).ToString(time < 3600 ? @"mm\:ss" : @"hh\:mm\:ss");
@@ -25,11 +28,16 @@
 <div class="container">
 
     <div class="alert alert-info">
-        <h2><a href="@string.Format(Constants.WebBaseUrl + Constants.ActivityUrl, Model.Activity.Id)" target="_blank" nofollow>@Model.Activity.Name</a></h2>
+        <h2><a href="@string.Format(Constants.WebBaseUrl + Constants.ActivityPartUrl, Model.Activity.Id)" target="_blank" nofollow rel="nofollow">@Model.Activity.Name</a></h2>
         Showing data from latest run
         <p class="lead">
             @Model.Activity.Description
         </p>
+        <div>
+            Links:
+            <a href="@string.Format(Constants.WebBaseUrl + Constants.ActivityPartUrl, Model.Activity.Id)" target="_blank" nofollow rel="nofollow">Strava ...</a>
+            <a href="@string.Format(Constants.FlyByUrl, Model.Activity.Id)" target="_blank" nofollow rel="nofollow">Flybys ...</a>
+        </div>
     </div>
 
 </div>
@@ -131,7 +139,7 @@
 
                 <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                     <div class="panel-heading">
-                        <h1 class="panel-title text-center">@Model.Activity.AverageCadence.ToString("N0")</h1>
+                        <h1 class="panel-title text-center">@FormattedCadence(Model.Activity.AverageCadence)</h1>
                     </div>
                     <div class="panel-body text-center">
                         <strong>Avg cadence</strong>
@@ -261,7 +269,7 @@
                         <td class="text-right">@FormattedTime(segment.MovingTime)</td>
                         <td class="text-right">@ToPace(segment.Distance, segment.MovingTime)</td>
                         <td class="text-right">@Math.Round(segment.AverageHeartrate, 0)</td>
-                        <td class="text-right">@Math.Round(segment.AverageCadence, 0)</td>
+                        <td class="text-right">@FormattedCadence(segment.AverageCadence)</td>
                     </tr>
                 }
             </tbody>
@@ -331,7 +339,7 @@
                                 <td class="text-right">@FormattedTime(lap.MovingTime)</td>
                                 <td class="text-right">@ToPace(lap.Distance, lap.MovingTime)</td>
                                 <td class="text-right">@Math.Round(lap.AverageHeartrate, 0)</td>
-                                <td class="text-right">@Math.Round(lap.AverageCadence, 0)</td>
+                                <td class="text-right">@FormattedCadence(lap.AverageCadence)</td>
                                 <td class="text-right">@lap.TotalElevationGain</td>
                             </tr>
                         }

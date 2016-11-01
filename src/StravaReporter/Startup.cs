@@ -63,7 +63,9 @@ namespace StravaReporter
             services.AddTransient<IStravaConnector, StravaConnector>();
             services.AddTransient<IStravaManager, StravaManager>();
             services.AddTransient<ClaimsPrincipal>(
-                    s => s.GetService<IHttpContextAccessor>().HttpContext.User); 
+                    s => s.GetService<IHttpContextAccessor>().HttpContext.User);
+
+            services.Configure<IISOptions>(options => { options.ForwardWindowsAuthentication = true; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
