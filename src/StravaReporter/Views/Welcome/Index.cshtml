@@ -1,5 +1,6 @@
 ﻿@using StravaReporter.Models.Strava;
 @model Activity
+@using StravaReporter.Controllers;
 
 @{
     ViewData["Title"] = "Welcome";
@@ -7,7 +8,29 @@
 
 <div class="container">
 
-    <h2>Welcome to <b>strava-reporter</b> website</h2>
-    <hr />
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h2>Welcome to <b>strava-reporter</b> @User.Identity.Name</h2>
+        <p class="lead">
+            Head over to @Html.ActionLink("Latest activity", "", "Activity")
+        </p>
+    }
+    else
+    {
+        <h2>Welcome to <b>strava-reporter</b></h2>
+        <p class="lead">
+            Log in and see your latest strava run
+        </p>
+        <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+            <div>
+                <p>
+                    <button type="submit" class="image-button" name="provider" value="Strava" title="Log in using your Strava account">
+                        <img src="~/images/btn_strava_connectwith_orange.svg" alt="Strava login" title="Log in using your Strava account">
+                    </button>
+                </p>
+            </div>
+        </form>
+    }
 
 </div>

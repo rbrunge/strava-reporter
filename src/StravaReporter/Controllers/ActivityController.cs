@@ -12,14 +12,11 @@ namespace StravaReporter.Controllers
     [Authorize]
     public class ActivityController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
         private readonly IStravaManager _stravaManager;
 
-        public ActivityController(UserManager<ApplicationUser> userManager, ILoggerFactory loggerFactory, IStravaManager stravaManager)
+        public ActivityController(ILoggerFactory loggerFactory, IStravaManager stravaManager)
         {
-            _userManager = userManager;
-            _logger = loggerFactory.CreateLogger<ManageController>();
             _stravaManager = stravaManager;
         }
 
@@ -30,6 +27,11 @@ namespace StravaReporter.Controllers
             model.Activity = await _stravaManager.GetLatestAsync();
             model.Laps = await _stravaManager.GetLapsAsync(model.Activity.Id);
             return View(model);
+        }
+
+        public async Task<IActionResult> Test()
+        {
+            return View();
         }
     }
 }

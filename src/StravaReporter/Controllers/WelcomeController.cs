@@ -12,13 +12,11 @@ namespace StravaReporter.Controllers
     [AllowAnonymous]
     public class WelcomeController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
 
-        public WelcomeController(UserManager<ApplicationUser> userManager, ILoggerFactory loggerFactory)
+        public WelcomeController(ILoggerFactory loggerFactory)
         {
-            _userManager = userManager;
-            _logger = loggerFactory.CreateLogger<ManageController>();
+            _logger = loggerFactory.CreateLogger<WelcomeController>();
         }
 
         public IActionResult Index()

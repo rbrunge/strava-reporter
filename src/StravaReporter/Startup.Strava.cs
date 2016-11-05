@@ -1,55 +1,44 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using StravaReporter.Models;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 
 namespace StravaReporter
 {
-    public class StravaOptions : OAuthOptions
-    {
-        private readonly UserManager<ApplicationUser> _userManager;
-        public StravaOptions()
-        {
-        }
-        public StravaOptions(UserManager<ApplicationUser> userManager)
-        {
-            _userManager = userManager;
-        }
-    }
-    
     public partial class Startup
     {
-
-        private StravaOptions StravaOptions
+        private OAuthOptions StravaOptions
         {
             get
             {
-                var options = new StravaOptions
+                return new OAuthOptions
                 {
-                    DisplayName = "Strava",
+                    // We need to specify an Authentication Scheme
+                    AuthenticationScheme = "Strava",
+
                     ClientId = Configuration["Authentication:Strava:ClientId"],
                     ClientSecret = Configuration["Authentication:Strava:ClientSecret"],
-                    TokenEndpoint = "https://www.strava.com/oauth/token",
-                    AuthorizationEndpoint = "https://www.strava.com/oauth/authorize",
-                    UserInformationEndpoint = "https://www.strava.com/api/v3/athlete",
-                    AuthenticationScheme = "Strava",
+
                     CallbackPath = new PathString("/signin-strava"),
-                    SaveTokens = true,
+
+                    AuthorizationEndpoint = "https://www.strava.com/oauth/authorize",
+                    TokenEndpoint = "https://www.strava.com/oauth/token",
+                    UserInformationEndpoint = "https://www.strava.com/api/v3/athlete",
+
+                    Scope = { "view_private" },
+
                     Events = new OAuthEvents
                     {
-                        OnCreatingTicket = async context => { await CreatingStravaAuthTicket(context); },
-                        OnTicketReceived = async context => { await StravaTicketReceived(context); },
+                        // The OnCreatingTicket event is called after the user has been authenticated and the OAuth middleware has
+                        // created an auth ticket. We need to manually call the UserInformationEndpoint to retrieve the user's information,
+                        // parse the resulting JSON to extract the relevant information, and add the correct claims.
+                        OnCreatingTicket = async context => { await CreatingStravaAuthTicket(context); }
                     }
                 };
-                options.Scope.Add("view_private");
-                return options;
             }
         }
 
@@ -58,46 +47,58 @@ namespace StravaReporter
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private static async Task CreatingStravaAuthTicket(OAuthCreatingTicketContext context)
+        private async Task CreatingStravaAuthTicket(OAuthCreatingTicketContext context)
         {
-            // Get the GitHub user
+            // Retrieve user info
             var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            request.Headers.Add("x-li-format", "json"); // Tell LinkedIn we want the result in JSON, otherwise it will return XML
 
             var response = await context.Backchannel.SendAsync(request, context.HttpContext.RequestAborted);
             response.EnsureSuccessStatusCode();
 
+            // Extract the user info object
             var user = JObject.Parse(await response.Content.ReadAsStringAsync());
-            context.Identity.AddClaim(new Claim(Models.Strava.Constants.AccessToken, context.AccessToken));
-            var identifier = user.Value<string>("id");
-            if (!string.IsNullOrEmpty(identifier))
+
+            // Add token:
+            context.Identity.AddClaim(new Claim("urn:strava:accesstoken", context.AccessToken, ClaimValueTypes.String, context.Options.ClaimsIssuer));
+
+            // Add the Name Identifier claim
+            var userId = user.Value<string>("id");
+            if (!string.IsNullOrEmpty(userId))
             {
-                context.Identity.AddClaim(new Claim(
-                    ClaimTypes.NameIdentifier, identifier,
-                    ClaimValueTypes.String, context.Options.ClaimsIssuer));
+                context.Identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, userId, ClaimValueTypes.String, context.Options.ClaimsIssuer));
             }
 
-            var userName = user.Value<string>("username");
-            if (!string.IsNullOrEmpty(userName))
+            // Add the Name claim
+            var firstName = user.Value<string>("firstname");
+            if (!string.IsNullOrEmpty(firstName))
             {
-                context.Identity.AddClaim(new Claim(
-                    ClaimsIdentity.DefaultNameClaimType, userName,
-                    ClaimValueTypes.String, context.Options.ClaimsIssuer));
+                context.Identity.AddClaim(new Claim(ClaimTypes.Name, firstName, ClaimValueTypes.String, context.Options.ClaimsIssuer));
+                context.Identity.AddClaim(new Claim(ClaimTypes.GivenName, firstName, ClaimValueTypes.String, context.Options.ClaimsIssuer));
             }
 
+            var lastName = user.Value<string>("lastname");
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                context.Identity.AddClaim(new Claim(ClaimTypes.Surname, lastName, ClaimValueTypes.String, context.Options.ClaimsIssuer));
+            }
+
+            // Add the email address claim
             var email = user.Value<string>("email");
             if (!string.IsNullOrEmpty(email))
             {
-                context.Identity.AddClaim(new Claim(
-                     ClaimTypes.Email, email,
-                    ClaimValueTypes.String, context.Options.ClaimsIssuer));
+                context.Identity.AddClaim(new Claim(ClaimTypes.Email, email, ClaimValueTypes.String,
+                    context.Options.ClaimsIssuer));
             }
-        }
 
-        private static async Task StravaTicketReceived(TicketReceivedContext context)
-        {
-            await Task.Delay(0);
+            // Add the Profile Picture claim
+            var pictureUrl = user.Value<string>("profile");
+            if (!string.IsNullOrEmpty(pictureUrl))
+            {
+                context.Identity.AddClaim(new Claim("profile-picture", pictureUrl, ClaimValueTypes.String,
+                    context.Options.ClaimsIssuer));
+            }
         }
     }
 }

@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using StravaReporter.Data;
-using StravaReporter.Models;
 using StravaReporter.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Authentication;
 
 namespace StravaReporter
 {
@@ -44,13 +42,7 @@ namespace StravaReporter
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
+            services.AddAuthentication(options => options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
             services.AddMvc(options =>
             {
                 options.Filters.Add(new RequireHttpsAttribute());
@@ -79,7 +71,6 @@ namespace StravaReporter
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
             else
@@ -91,15 +82,41 @@ namespace StravaReporter
 
             app.UseStaticFiles();
 
-            app.UseIdentity();
+            // app.UseIdentity();
 
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = "Cookies",
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                LoginPath = new PathString("/login"),
+                LogoutPath = new PathString("/logout")
+            });
             app.UseOAuthAuthentication(StravaOptions);
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Activity}/{action=Index}/{id?}");
+            });
+            app.Map("/login", builder =>
+            {
+                builder.Run(async context =>
+                {
+                    // Return a challenge to invoke the LinkedIn authentication scheme
+                    await context.Authentication.ChallengeAsync("Strava", properties: new AuthenticationProperties { RedirectUri = context.Request.Query?["ReturnUrl"] ?? "" });
+                });
+            });
+            app.Map("/logout", builder =>
+            {
+                builder.Run(async context =>
+                {
+                    // Sign the user out of the authentication middleware (i.e. it will clear the Auth cookie)
+                    await context.Authentication.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    // Redirect the user to the home page after signing out
+                    context.Response.Redirect("/");
+                });
             });
         }
     }
