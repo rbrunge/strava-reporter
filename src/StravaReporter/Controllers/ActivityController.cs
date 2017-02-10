@@ -28,10 +28,5 @@ namespace StravaReporter.Controllers
             model.Laps = await _stravaManager.GetLapsAsync(model.Activity.Id);
             return View(model);
         }
-
-        public async Task<IActionResult> Test()
-        {
-            return View();
-        }
     }
 }

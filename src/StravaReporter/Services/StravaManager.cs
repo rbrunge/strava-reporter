@@ -1,21 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using StravaReporter.Models.Strava;
-using System;
+using StravaReporter.Repositories;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace StravaReporter.Services
 {
+
+
     public class StravaManager : IStravaManager
     {
         private readonly IStravaConnector _stravaConnector;
-        public StravaManager(IStravaConnector stravaConnector)
+        private readonly IRemoteRepository _remoteRepository;
+
+        public StravaManager(IStravaConnector stravaConnector, IRemoteRepository remoteRepository)
         {
             _stravaConnector = stravaConnector;
+            _remoteRepository = remoteRepository;
         }
 
         public async Task<Activity> GetLatestAsync()
@@ -24,7 +26,11 @@ namespace StravaReporter.Services
 
             var latestJson = await _stravaConnector.GetDataAsync(Constants.ActivityLastestSummaryPartUrl);
             var latest = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<ActivitySummary>>(latestJson));
-            var json = await _stravaConnector.GetDataAsync(string.Format(Constants.ActivityPartUrl, latest.FirstOrDefault().Id));
+
+            _remoteRepository.CreateOrUpdateActivitySummary(latest);
+
+            var json = await _stravaConnector.GetDataAsync(
+                string.Format(Constants.ActivityPartUrl, latest.OrderByDescending(m => m.StartDate).FirstOrDefault().Id));
             activity = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<Activity>(json));
 
             return activity;
