@@ -14,7 +14,6 @@ namespace StravaReporter.Services
     public interface IStravaManager
     {
         Task<Activity> GetLatestAsync();
-        Task<IEnumerable<Lap>> GetLapsAsync(int activityId);
     }
 
 }

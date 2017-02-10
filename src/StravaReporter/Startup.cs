@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http.Authentication;
 using StravaReporter.Repositories;
 using StravaReporter.Models;
 using Nest;
+using System;
 
 namespace StravaReporter
 {
@@ -56,8 +57,9 @@ namespace StravaReporter
             services.AddTransient<IAccessTokenProvider, HttpContextAccessTokenProvider>();
             services.AddTransient<IStravaConnector, StravaConnector>();
             services.AddTransient<IStravaManager, StravaManager>();
-            services.AddTransient<IRemoteRepository, RemoteRepository>();
-            services.AddSingleton<IElasticClient, ElasticClient>();
+            services.AddTransient<ICacheRepository, CacheRepository>();
+            services.AddSingleton<IElasticClient>(
+                new ElasticClient(new Uri(Configuration["RemoteRepository:Elasticsearch:FullAccessUrl"])));
            //  services.AddTransient<IRemoteRepository, RemoteRepository>();
             services.Configure<ElasticsearchSettings>(
                 m => m.FullAccessUrl = Configuration.GetValue<string>("RemoteRepository:Elasticsearch:FullAccessUrl"));

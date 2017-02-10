@@ -8,7 +8,7 @@ namespace StravaReporter.Tests
         [Test]
         public void Data_safasf_ReturnsOne()
         {
-
+             
         }
     }
 }

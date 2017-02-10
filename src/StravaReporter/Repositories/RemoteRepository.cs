@@ -1,48 +1,48 @@
-﻿using Microsoft.Extensions.Options;
-using Nest;
-using StravaReporter.Models;
+﻿using Nest;
 using StravaReporter.Models.Strava;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace StravaReporter.Repositories
 {
-    public interface IRemoteRepository
+    public interface ICacheRepository
     {
-        Task<ActivitySummary> GetActivitySummary(int id);
-        void CreateOrUpdateActivitySummary(IEnumerable<ActivitySummary> activitySummary);
+        Task<ActivitySummary> GetActivitySummaryAsync(int id);
+        Task CreateOrUpdateActivitySummaryAsync(IEnumerable<ActivitySummary> activitySummary);
+        Task<Activity> GetActivityAsync(int id);
+        Task CreateOrUpdateActivityAsync(IEnumerable<Activity> activitySummary);
     }
 
-    public class RemoteRepository : IRemoteRepository
+    public class CacheRepository : ICacheRepository
     {
-        private readonly ElasticsearchSettings _settings;
         private readonly IElasticClient _elasticClient;
 
-        public RemoteRepository(IOptions<ElasticsearchSettings> settings, IElasticClient elasticClient)
+        public CacheRepository(IElasticClient elasticClient)
         {
-            _settings = settings.Value;
-            if (_settings == null) throw new ArgumentNullException(nameof(_settings));
-            if (string.IsNullOrEmpty(_settings.FullAccessUrl)) throw new ArgumentNullException(nameof(_settings.FullAccessUrl));
-            //_elasticClient = elasticClient;
-            //_elasticClient = new ConnectionSettings(new Uri(_settings.FullAccessUrl));
+            _elasticClient = elasticClient;
         }
 
-        public async void CreateOrUpdateActivitySummary(IEnumerable<ActivitySummary> activitySummary)
+        public async Task CreateOrUpdateActivitySummaryAsync(IEnumerable<ActivitySummary> activitySummary)
         {
-            var node = new Uri(_settings.FullAccessUrl);
-            var settings = new ConnectionSettings(node);
-            var client = new ElasticClient(settings);
-            var response = await client.IndexManyAsync(activitySummary,  nameof(ActivitySummary).ToLowerInvariant());
+            var response = await _elasticClient.IndexManyAsync(activitySummary,  nameof(ActivitySummary).ToLowerInvariant());
         }
 
-        public async Task<ActivitySummary> GetActivitySummary(int id)
+        public async Task<ActivitySummary> GetActivitySummaryAsync(int id)
         {
-            var node = new Uri(_settings.FullAccessUrl);
-            var settings = new ConnectionSettings(node);
-            var client = new ElasticClient(settings);
-            var response = await client.GetAsync(new DocumentPath<ActivitySummary>(id));
+            var response = await _elasticClient.GetAsync(new DocumentPath<ActivitySummary>(id));
             return response.Source;
         }
+
+        public async Task CreateOrUpdateActivityAsync(IEnumerable<Activity> activity)
+        {
+            var response = await _elasticClient.IndexManyAsync(activity, nameof(Activity).ToLowerInvariant());
+        }
+
+        public async Task<Activity> GetActivityAsync(int id)
+        {
+            var response = await _elasticClient.GetAsync<Activity>(id, idx => idx.Index(nameof(Activity).ToLowerInvariant()));
+            return response.Source;
+        }
+
     }
 }

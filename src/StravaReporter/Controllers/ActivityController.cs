@@ -25,7 +25,6 @@ namespace StravaReporter.Controllers
             // var token = User.Claims.FirstOrDefault(n => n.Type == Constants.AccessToken).Value;
             var model = new ActivityAggregationViewModel();
             model.Activity = await _stravaManager.GetLatestAsync();
-            model.Laps = await _stravaManager.GetLapsAsync(model.Activity.Id);
             return View(model);
         }
     }

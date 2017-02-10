@@ -281,7 +281,7 @@
 <div class="row">
     @if (Model?.Activity?.SplitsMetric != null && Model.Activity.SplitsMetric.Any())
     {
-        <div class="col-md-@(Model?.Laps != null && Model.Laps.Any() ? 6 : 12)">
+        <div class="col-md-@(Model?.Activity?.Laps != null && Model.Activity.Laps.Any() ? 6 : 12)">
 
             <div class="table-responsive">
                 <h3>Splits</h3>
@@ -313,7 +313,7 @@
             </div>
         </div>
     }
-    @if (Model?.Laps != null && Model.Laps.Any())
+    @if (Model?.Activity?.Laps != null && Model.Activity.Laps.Any())
     {
         <div class="col-md-6">
             <div class="table-responsive">
@@ -331,7 +331,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var lap in Model.Laps)
+                        @foreach (var lap in Model.Activity.Laps)
                         {
                             <tr>
                                 <td>@lap.LapIndex</td>

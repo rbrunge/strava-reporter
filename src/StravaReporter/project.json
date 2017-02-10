@@ -48,7 +48,8 @@
     },
     "Microsoft.AspNetCore.Owin": "1.0.0",
     "Microsoft.AspNetCore.Authentication.Facebook": "1.0.0",
-    "NEST": "5.0.1"
+    "NEST": "5.0.1",
+    "NETStandard.Library": "1.6.1-preview1-24530-04"
   },
 
   "tools": {
