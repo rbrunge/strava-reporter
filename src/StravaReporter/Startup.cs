@@ -107,7 +107,7 @@ namespace StravaReporter
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Activity}/{action=Index}/{id?}");
+                    template: "{controller=Welcome}/{action=Index}/{id?}");
             });
             app.Map("/login", builder =>
             {
