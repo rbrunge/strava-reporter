@@ -4,11 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StravaReporter.Services;
-using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Authentication;
+using StravaReporter.Repositories;
+using StravaReporter.Models;
+using Nest;
+using System;
 
 namespace StravaReporter
 {
@@ -45,7 +48,7 @@ namespace StravaReporter
             services.AddAuthentication(options => options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
             services.AddMvc(options =>
             {
-                options.Filters.Add(new RequireHttpsAttribute());
+                // options.Filters.Add(new RequireHttpsAttribute());
             });
 
             // Add application services.
@@ -54,6 +57,13 @@ namespace StravaReporter
             services.AddTransient<IAccessTokenProvider, HttpContextAccessTokenProvider>();
             services.AddTransient<IStravaConnector, StravaConnector>();
             services.AddTransient<IStravaManager, StravaManager>();
+            services.AddTransient<ICacheRepository, CacheRepository>();
+            services.AddSingleton<IElasticClient>(
+                new ElasticClient(new Uri(Configuration["RemoteRepository:Elasticsearch:FullAccessUrl"])));
+           //  services.AddTransient<IRemoteRepository, RemoteRepository>();
+            services.Configure<ElasticsearchSettings>(
+                m => m.FullAccessUrl = Configuration.GetValue<string>("RemoteRepository:Elasticsearch:FullAccessUrl"));
+
             services.AddTransient<ClaimsPrincipal>(
                     s => s.GetService<IHttpContextAccessor>().HttpContext.User);
 
@@ -97,7 +107,7 @@ namespace StravaReporter
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Activity}/{action=Index}/{id?}");
+                    template: "{controller=Welcome}/{action=Index}/{id?}");
             });
             app.Map("/login", builder =>
             {
