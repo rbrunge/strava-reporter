@@ -279,40 +279,6 @@
 <div class="clearfix"></div>
 <hr />
 <div class="row">
-    @if (Model?.Activity?.SplitsMetric != null && Model.Activity.SplitsMetric.Any())
-    {
-        <div class="col-md-@(Model?.Activity?.Laps != null && Model.Activity.Laps.Any() ? 6 : 12)">
-
-            <div class="table-responsive">
-                <h3>Splits</h3>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Split #</th>
-                            <th class="text-right">Distance</th>
-                            <th class="text-right">Time</th>
-                            <th class="text-right">Pace (min/km)</th>
-                            <th class="text-right">Heartrate</th>
-                            <th class="text-right">Elevation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var split in Model.Activity.SplitsMetric)
-                        {
-                            <tr>
-                                <td>@split.Split</td>
-                                <td class="text-right">@FormattedDistance(split.Distance)</td>
-                                <td class="text-right">@FormattedTime(split.MovingTime)</td>
-                                <td class="text-right">@ToPace(split.Distance, split.MovingTime)</td>
-                                <td class="text-right">@Math.Round(split.AverageHeartrate, 0)</td>
-                                <td class="text-right">@Math.Round(split.ElevationDifference, 0)</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    }
     @if (Model?.Activity?.Laps != null && Model.Activity.Laps.Any())
     {
         <div class="col-md-6">
@@ -348,5 +314,38 @@
             </div>
         </div>
     }
-</div>
+    @if (Model?.Activity?.SplitsMetric != null && Model.Activity.SplitsMetric.Any())
+    {
+        <div class="col-md-@(Model?.Activity?.Laps != null && Model.Activity.Laps.Any() ? 6 : 12)">
+
+            <div class="table-responsive">
+                <h3>Splits</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Split #</th>
+                            <th class="text-right">Distance</th>
+                            <th class="text-right">Time</th>
+                            <th class="text-right">Pace (min/km)</th>
+                            <th class="text-right">Heartrate</th>
+                            <th class="text-right">Elevation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var split in Model.Activity.SplitsMetric)
+                        {
+                            <tr>
+                                <td>@split.Split</td>
+                                <td class="text-right">@FormattedDistance(split.Distance)</td>
+                                <td class="text-right">@FormattedTime(split.MovingTime)</td>
+                                <td class="text-right">@ToPace(split.Distance, split.MovingTime)</td>
+                                <td class="text-right">@Math.Round(split.AverageHeartrate, 0)</td>
+                                <td class="text-right">@Math.Round(split.ElevationDifference, 0)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 </div>
