@@ -12,6 +12,8 @@ using StravaReporter.Repositories;
 using StravaReporter.Models;
 using Nest;
 using System;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
 
 namespace StravaReporter
 {
@@ -24,13 +26,17 @@ namespace StravaReporter
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment()) 
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
 
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
+            }
+            else
+            {
+                builder.AddJsonFile("appSecrets.json", optional: true, reloadOnChange: true);
             }
 
             builder.AddEnvironmentVariables();
@@ -58,6 +64,8 @@ namespace StravaReporter
             services.AddTransient<IStravaConnector, StravaConnector>();
             services.AddTransient<IStravaManager, StravaManager>();
             services.AddTransient<ICacheRepository, CacheRepository>();
+
+
             services.AddSingleton<IElasticClient>(
                 new ElasticClient(new Uri(Configuration["RemoteRepository:Elasticsearch:FullAccessUrl"])));
            //  services.AddTransient<IRemoteRepository, RemoteRepository>();

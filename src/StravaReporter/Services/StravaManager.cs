@@ -57,7 +57,7 @@ namespace StravaReporter.Services
         }
 
 
-        private async Task<IEnumerable<Lap>> GetLapsAsync(int activityId)
+        private async Task<IEnumerable<Lap>> GetLapsAsync(long activityId)
         {
             IEnumerable<Lap> laps;
 

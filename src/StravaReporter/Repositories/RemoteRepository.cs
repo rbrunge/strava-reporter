@@ -7,9 +7,9 @@ namespace StravaReporter.Repositories
 {
     public interface ICacheRepository
     {
-        Task<ActivitySummary> GetActivitySummaryAsync(int id);
+        Task<ActivitySummary> GetActivitySummaryAsync(long id);
         Task CreateOrUpdateActivitySummaryAsync(IEnumerable<ActivitySummary> activitySummary);
-        Task<Activity> GetActivityAsync(int id);
+        Task<Activity> GetActivityAsync(long id);
         Task CreateOrUpdateActivityAsync(IEnumerable<Activity> activitySummary);
     }
 
@@ -27,7 +27,7 @@ namespace StravaReporter.Repositories
             var response = await _elasticClient.IndexManyAsync(activitySummary,  nameof(ActivitySummary).ToLowerInvariant());
         }
 
-        public async Task<ActivitySummary> GetActivitySummaryAsync(int id)
+        public async Task<ActivitySummary> GetActivitySummaryAsync(long id)
         {
             var response = await _elasticClient.GetAsync(new DocumentPath<ActivitySummary>(id));
             return response.Source;
@@ -38,7 +38,7 @@ namespace StravaReporter.Repositories
             var response = await _elasticClient.IndexManyAsync(activity, nameof(Activity).ToLowerInvariant());
         }
 
-        public async Task<Activity> GetActivityAsync(int id)
+        public async Task<Activity> GetActivityAsync(long id)
         {
             var response = await _elasticClient.GetAsync<Activity>(id, idx => idx.Index(nameof(Activity).ToLowerInvariant()));
             return response.Source;
