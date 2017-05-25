@@ -2,11 +2,11 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "MSTest.TestAdapter": "1.1.10-rc2",
-    "MSTest.TestFramework": "1.0.8-rc2",
-    "NETStandard.Library": "1.6.1-preview1-24530-04",
-    "NSubstitute": "2.0.1-rc",
-    "NUnit": "3.6.0"
+    "MSTest.TestAdapter": "1.1.17",
+    "MSTest.TestFramework": "1.1.17",
+    "NETStandard.Library": "1.6.1",
+    "NSubstitute": "2.0.3",
+    "NUnit": "3.6.1"
   },
 
   "frameworks": {

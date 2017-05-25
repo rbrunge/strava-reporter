@@ -42,8 +42,29 @@
 
 </div>
 <div class="container">
-    @{ int i = 0; }
+    @{
+        int i = 0;
+        var activityIcon =
+            Model.Activity.Type == "Ride"
+                ? "/images/icons/cycling.png"
+                : Model.Activity.Type == "Swim"
+                    ? "/images/icons/swimming.png"
+                    : Model.Activity.Type == "Run"
+                        ? "/images/icons/running.png"
+                        : "";
+    }
     <div class="row">
+        @if (!string.IsNullOrEmpty(activityIcon))
+        {
+            <div class="col-xs-6 col-md-3">
+                <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
+                    <div class="panel-body text-center">
+                        <img style="max-height: 100px;" src="@activityIcon" alt="Activity type" title="Activity type"/>
+                    </div>
+                </div>
+            </div>
+        }
+
         <div class="col-xs-6 col-md-3">
 
             <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
@@ -57,7 +78,6 @@
 
         </div>
         <div class="col-xs-6 col-md-3">
-
             <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                 <div class="panel-heading">
                     <h1 class="panel-title text-center">@FormattedTime(Model.Activity.MovingTime)</h1>
@@ -66,10 +86,8 @@
                     <strong>Duration</strong>
                 </div>
             </div>
-
         </div>
         <div class="col-xs-6 col-md-3">
-
             <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                 <div class="panel-heading">
                     <h1 class="panel-title text-center">@ToPace(Model.Activity.Distance, Model.Activity.MovingTime) min/km</h1>
@@ -78,11 +96,8 @@
                     <strong>Pace</strong>
                 </div>
             </div>
-
-
         </div>
         <div class="col-xs-6 col-md-3">
-
             <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                 <div class="panel-heading">
                     <h1 class="panel-title text-center">@Model.Activity.StartDateLocal.ToString("ddd dd-MM-yyyy")</h1>
@@ -91,11 +106,8 @@
                     <strong>Date</strong>
                 </div>
             </div>
-
-
         </div>
         <div class="col-xs-6 col-md-3">
-
             <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                 <div class="panel-heading">
                     <h1 class="panel-title text-center">@(Model.Activity.TotalElevationGain)</h1>
@@ -104,10 +116,8 @@
                     <strong>Total elevation</strong>
                 </div>
             </div>
-
         </div>
         <div class="col-xs-6 col-md-3">
-
             <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                 <div class="panel-heading">
                     <h1 class="panel-title text-center">@Model.Activity.LocationCity</h1>
@@ -116,12 +126,10 @@
                     <strong>City</strong>
                 </div>
             </div>
-
         </div>
         @if (Model.Activity.HasHeartrate && Model.Activity.AverageHeartrate > 0)
         {
             <div class="col-xs-6 col-md-3">
-
                 <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                     <div class="panel-heading">
                         <h1 class="panel-title text-center">@Model.Activity.AverageHeartrate.ToString("N0")</h1>
@@ -130,13 +138,11 @@
                         <strong>Avg heartrate</strong>
                     </div>
                 </div>
-
             </div>
         }
         @if (Model.Activity?.AverageCadence != null && Model.Activity.AverageCadence > 0)
         {
             <div class="col-xs-6 col-md-3">
-
                 <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                     <div class="panel-heading">
                         <h1 class="panel-title text-center">@FormattedCadence(Model.Activity.AverageCadence)</h1>
@@ -145,11 +151,9 @@
                         <strong>Avg cadence</strong>
                     </div>
                 </div>
-
             </div>
         }
         <div class="col-xs-6 col-md-3">
-
             <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                 <div class="panel-heading">
                     <h1 class="panel-title text-center">@Model.Activity.Calories</h1>
@@ -158,10 +162,8 @@
                     <strong>Calories</strong>
                 </div>
             </div>
-
         </div>
         <div class="col-xs-6 col-md-3">
-
             <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
                 <div class="panel-heading">
                     <h1 class="panel-title text-center">@Model.Activity.DeviceName</h1>
@@ -170,78 +172,78 @@
                     <strong>Device</strong>
                 </div>
             </div>
-
         </div>
-        @{
+        @if (Model?.Activity?.BestEfforts != null)
+        {
             var bestEffortFiveKilometers = Model.Activity.BestEfforts.FirstOrDefault(n => n.Distance == 5000);
-        }
-        @if (bestEffortFiveKilometers != null)
-        {
-            <div class="col-xs-6 col-md-3">
-
-                <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
-                    <div class="panel-heading">
-                        <h1 class="panel-title text-center">@FormattedTime(bestEffortFiveKilometers.MovingTime) min - @ToPace(bestEffortFiveKilometers.Distance, bestEffortFiveKilometers.MovingTime)</h1>
-                    </div>
-                    <div class="panel-body text-center">
-                        <strong>Best @bestEffortFiveKilometers.Name</strong>
+            if (bestEffortFiveKilometers != null)
+            {
+                <div class="col-xs-6 col-md-3">
+                    <div class="panel status panel-@(informationOptions[i++ % (informationOptions.Length)])">
+                        <div class="panel-heading">
+                            <h1 class="panel-title text-center">@FormattedTime(bestEffortFiveKilometers.MovingTime) min - @ToPace(bestEffortFiveKilometers.Distance, bestEffortFiveKilometers.MovingTime)</h1>
+                        </div>
+                        <div class="panel-body text-center">
+                            <strong>Best @bestEffortFiveKilometers.Name</strong>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        @{
+            }
+
             var bestEffortTenKilometers = Model.Activity.BestEfforts.FirstOrDefault(n => n.Distance == 10000);
-        }
-        @if (bestEffortTenKilometers != null)
-        {
-            <div class="col-xs-6 col-md-3">
+            if (bestEffortTenKilometers != null)
+            {
+                <div class="col-xs-6 col-md-3">
 
-                <div class="panel status panel-@(informationOptions[i++%(informationOptions.Length)])">
-                    <div class="panel-heading">
-                        <h1 class="panel-title text-center">@FormattedTime(bestEffortTenKilometers.MovingTime) min - @ToPace(bestEffortTenKilometers.Distance, bestEffortTenKilometers.MovingTime)</h1>
-                    </div>
-                    <div class="panel-body text-center">
-                        <strong>Best @bestEffortTenKilometers.Name</strong>
+                    <div class="panel status panel-@(informationOptions[i++ % (informationOptions.Length)])">
+                        <div class="panel-heading">
+                            <h1 class="panel-title text-center">@FormattedTime(bestEffortTenKilometers.MovingTime) min - @ToPace(bestEffortTenKilometers.Distance, bestEffortTenKilometers.MovingTime)</h1>
+                        </div>
+                        <div class="panel-body text-center">
+                            <strong>Best @bestEffortTenKilometers.Name</strong>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }
     </div>
-
 </div>
 <div class="clearfix"></div>
-
 <hr />
 
-<div class="col-md-8">
-    <div class="table-responsive">
-        <h3>Best efforts</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th class="text-right">Distance (meters)</th>
-                    <th class="text-right">Duration (hh:min:sec)</th>
-                    <th class="text-right">Pace (min/km)</th>
-                    <th class="text-right">Rank</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Activity?.BestEfforts)
-                {
+@if (Model.Activity?.BestEfforts != null)
+{
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <h3>Best efforts</h3>
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>@item.Name</td>
-                        <td class="text-right">@item.Distance</td>
-                        <td class="text-right">@FormattedTime(item.MovingTime)</td>
-                        <td class="text-right">@ToPace(item.Distance, item.MovingTime)</td>
-                        <td class="text-right">@item.PrRank</td>
+                        <th>Name</th>
+                        <th class="text-right">Distance (meters)</th>
+                        <th class="text-right">Duration (hh:min:sec)</th>
+                        <th class="text-right">Pace (min/km)</th>
+                        <th class="text-right">Rank</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Activity?.BestEfforts)
+                {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td class="text-right">@item.Distance</td>
+                            <td class="text-right">@FormattedTime(item.MovingTime)</td>
+                            <td class="text-right">@ToPace(item.Distance, item.MovingTime)</td>
+                            <td class="text-right">@item.PrRank</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
-<div class="clearfix"></div>
+    <div class="clearfix"></div>
+}
+
 @if (Model.Activity.SegmentEfforts != null && Model.Activity.SegmentEfforts.Any(starred => starred.Segment.Starred))
 {
     <hr />
@@ -280,7 +282,7 @@
 <hr />
 <div class="row">
     @if (Model?.Activity?.SplitsMetric != null && Model.Activity.SplitsMetric.Any())
-    {
+            {
         <div class="col-md-@(Model?.Activity?.Laps != null && Model.Activity.Laps.Any() ? 6 : 12)">
 
             <div class="table-responsive">
@@ -314,7 +316,7 @@
         </div>
     }
     @if (Model?.Activity?.Laps != null && Model.Activity.Laps.Any())
-    {
+            {
         <div class="col-md-6">
             <div class="table-responsive">
                 <h3>Laps</h3>
@@ -348,5 +350,4 @@
             </div>
         </div>
     }
-</div>
 </div>
