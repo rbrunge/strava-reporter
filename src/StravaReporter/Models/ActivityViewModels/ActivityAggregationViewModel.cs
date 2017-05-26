@@ -62,7 +62,19 @@ namespace StravaReporter.Models.ActivityViewModels
         }
         public string FormattedDistance(double distance)
         {
+            if (Activity == null) throw new ArgumentNullException(nameof(distance));
+            return
+                Activity.Type == "Swim"
+                    ? FormattedDistanceMeter(distance)
+                    : FormattedDistanceKiloMeter(distance);
+        }
+        private string FormattedDistanceKiloMeter(double distance)
+        {
             return Math.Round(distance / 1000, 1).ToString("N1") + " km";
+        }
+        private string FormattedDistanceMeter(double distance)
+        {
+            return Math.Round(distance, 1).ToString("N0") + " m";
         }
 
 
