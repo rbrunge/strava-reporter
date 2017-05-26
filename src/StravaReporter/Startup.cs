@@ -36,6 +36,7 @@ namespace StravaReporter
             }
             else
             {
+                // after deploy, file is manually copied to root of site
                 builder.AddJsonFile("appSecrets.json", optional: true, reloadOnChange: true);
             }
 
