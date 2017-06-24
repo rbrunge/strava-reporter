@@ -1,0 +1,177 @@
+var previousResults = [
+		{
+			"name": "Robert_20150906T1000",
+			"image": "img/2015-09-06_Fursø2015.png",
+			"title": "Furesø Triatlon 2015",
+			"data": {
+				"date": "20150906T1000",
+				"description": "Endnu et godt stævne!<br/>" 
+							 + "Dagen før stod det ned i stænger, men heldigvis slap vi med en smule dryp"
+							 + "under svømningen. Vinden tog stille mere fat og der var rigeligt til alle til sidst.<br/><br/>"
+							 + "T1 gik laangsomt: fik ikke våddragten af armene før stop (ved ikke hvorfor jeg glemte det), og forud "
+							 + "havde jeg fumlet godt med velkrolåsen. Lå ikke helt i fingrene som det bør. Fik sokker og cykelsko på .. også langsomt. "
+							 + "Skulle nok have brugt et par minutter på at have tænkt T1 lidt bedre igennem.<br/>"
+							 + "T2 gik fint, smed windbreakeren og så ellers bare skifte sko og af sted.<br/><br/>"
+							 + "<b>Tøj</b>:<br/>"
+							 + "<em>Cykling</em><br/>"
+							 + "Sokker + windbeaker + sko + briller + hjelm + tri-top (var med på svøm). Undlod hot-wings pga sidste års noter og "
+							 + "det var godt valg. Der var chill på armen, men ikke koldt.<br/><br/>"
+							 + "<em>Løb</em><br/>"
+							 + "Rigeligt med tri-top. Stadig irriterende, at den skiller på midten så mavedellen flashes."
+							 + "<br/><br/>"
+							 + "Fik jeg sagt at det blæste? Tiderne er taget fra mit ur og ikke fra resultatsiden.<br/><br/>"
+							 + "Temperatur i luft ca 13 og vand ca 17. Har blæst op til 9 m/s.",
+				"swim": "01:57",
+				"t1": "03:54",
+				"ride": 32.9,
+				"t2": "01:36",
+				"run": "04:20",
+				"resultLink": "http://app.lap.io/event/2015-furesoe-tri/result/1104797",
+				"officialTime": "2:28:39"
+			}
+		},
+		{
+			"name": "Robert_20150821T1900",
+			"image": "img/kmd4_18_4-2015.jpg",
+			"title": "KMD 4:18:4 2015",
+			"data": {
+				"date": "20150821T1900",
+				"description": "Anden gang jeg ræser 4:18:4. Det er sku en hyggelig nullermand. Min æstetiske sans er lidt irriteret over, at cykelruten var 1,5 km for kort.",
+				"swim": "02:03",
+				"t1": "02:51",
+				"ride": 36.00,
+				"t2": "01:33",
+				"run": "04:10",
+				"resultLink": "http://live.ultimate.dk/desktop/front/?eventid=2565&pid=201548",
+				"officialTime": "56:31"
+			}
+		},
+		{
+			"name": "Robert_20150802T1000",
+			"image": "img/cphtri15.jpg",
+			"title": "CPH:TRI 2015 i Dragør",
+			"data": {
+				"date": "20150802T1000",
+				"description": "Endnu en flot dag i Dragør, hvor solen skinnede på os løbere og vinden var flink ved os på dæmningen. Kun øv over min punktering",
+				"swim": "02:05",
+				"t1": "01:23",
+				"ride": 31.84,
+				"t2": "00:57",
+				"run": "04:34",
+				"resultLink": "https://app.lap.io/event/2015-cph-triathlon/result/725499",
+				"officialTime": "5:07:59"
+			}
+		},
+		{
+			"name": "Robert_20150705T1100",
+			"image": "img/robert-kanaltri-2015.jpg",
+			"title": "KanalTri i Næstved, olympisk",
+			"data": {
+				"date": "20150705T1100",
+				"description": "Officiel sluttid: 2:24:59. Det var en meget varm løbetur - og tempoet blev derefter.",
+				"swim": "02:01",
+				"t1": "01:59",
+				"ride": 35.3,
+				"t2": "01:08",
+				"run": "04:47",
+				"resultLink": "http://racetecresults.com/MyResults.aspx?CId=16448&RId=65&EId=2&AId=16611",
+				"officialTime": "2:24:59"
+			}
+		},
+		{
+			"name": "Robert_20150614T0700",
+			"image": "img/robert-oresund-2015.jpg",
+			"title": "Øresund Triatlon, halv distance",
+			"data": {
+				"date": "20150614T0700",
+				"description": "Officel sluttid: 05:09:44",
+				"swim": "01:45",
+				"t1": "05:25",
+				"ride": 32.01,
+				"t2": "01:34",
+				"run": "04:47",
+				"resultLink": "http://live.ultimate.dk/desktop/front/?eventid=2424&pid=633",
+				"officialTime": "05:09:44"
+			}
+		},
+		{
+			"name": "Robert_20140928T1000",
+			"image": "img/robert-furesø-2014.jpg",
+			"title": "TRI4 Furesø Triatlon, olympisk",
+			"data": {
+				"date": "20140928T1000",
+				"description": "TRI4s årlige stævne. Det er som sådan ikke et personlig rekord-agtig stævne, da der er mange højdemeter. Specielt den der bakke på løbeturen der skal passeres tre gange. Anyway - et rigtig 				godt stævne.<br/><br/>								Den officielle tid var således:<br/>				Svøm: 28:37<br/>				T1: 3:07<br/>				Cykling: 1:12:27 (\"kun\" 39 km - har justeret efter dette i udregneren)<br/>				T2: 1:17<br/>				Løb: 44:37<br/>Samlet, officiel: 2:30:05<br/>Samlet, ekstrapoleret: 2 timer 32 min<br/><br/>								Påklædning:<br/>				Havde regnet med at det ville være koldere, så jeg cyklede med ærmer og 				cykeltrøje uden over tri-toppen. <br/>				Jeg mener jeg kunne have undværet ærmerne i dag. Gav slet ikke mening på				løbeturen.<br/>				Desuden cyklede og løb jeg med sokker, hvilket i dag var en god beslutning.<br/><br/>				T1 tog længere tid da jeg fumlede med låsen til svømmedragten og det tog 				forholdvis lang tid at få ærmerne på. Næste gang: hvis ærmerne skal på så 				rul dem op; det der i tre trin virker bare ikke.<br/>				Glæder mig tilat få et nyt løbeur, det er ikke nemt at skifte mellem cykel 				og løb med det; og specielt ikke nu hvor remmen er afkortet.<br/><br/>								Cykelcomputeren hastighedsmålerenhed som sidder på forhulet var gledet ned,				så mens jeg cyklede kunne jeg ikke se min hastighed på den. Brugte mit ur, men det er ikke optimalt.<br/><br/>				Apropos cykling: jeg skal træne noget mere - der er ikke så meget saft i de ben som jeg egentlig gerne vil have.",
+				"swim": "01:55",
+				"t1": "03:07",
+				"ride": 32.31,
+				"t2": "01:17",
+				"run": "04:27",
+				"resultLink": "https://app.lap.io/event/2014-tri4-olympisk-og-sprint-distance/result/671360",
+				"officialTime": "2:30:05"
+			}
+		},
+		{
+			"name": "Robert_20140803T0750",
+			"image": "img/robert.jpg",
+			"title": "CPH:TRI 2014, half distance",
+			"data": {
+				"date": "20140803T0750",
+				"description": "Min første halve jernmand. Planlagt løbetempo omkring 4:45 min/km, men endte med at være 5:30+. Det skyldes nok en kombination af, at jeg brugte for meget energi på cyklen, og så det faktum, at solen bagte fra en skyfri himmel. Lidt det samme som skete under kanaltri.",
+				"swim": "02:07",
+				"t1": "01:55",
+				"ride": 33.16,
+				"t2": "01:31",
+				"run": "05:25",
+				"resultLink": "https://app.lap.io/event/2014-cphtriathlon/result/343215",
+				"officialTime": "5:20:47"
+			}
+		},
+		{
+			"name": "Robert_20140706T1000",
+			"image": "img/robert-kanaltri-2014.jpg",
+			"title": "Kanaltri 2014, olympisk distance",
+			"data": {
+				"date": "20140706T1000",
+				"description": "Tiderne for t1 + cykling + t2 slået sammen i resultatlisten. Det var uhyggeligt varmt at løbe. Hele dagen havde solen skinnet fra en skyfri himmel, hvilket kunne mærkes til sidst. Efter 7,5 km vendepunktet måtte jeg ned og gå. Og det endda flere gange - jeg var lidt ophedet, og ville ikke tage nogen chancer. Puha - løb i sol er tough.",
+				"swim": "02:11",
+				"t1": "02:50",
+				"ride": 33.90,
+				"t2": "02:00",
+				"run": "04:44",
+				"resultLink": "http://www.hgatm.dk/cms/Clubhgam/ClubImages/resultatliste%20Kanaltri%2014%20Olympisk%20sorteret.pdf",
+				"officialTime": "2:35:44"
+			}
+		},
+		{
+			"name": "Robert_20140609T0900",
+			"image": "img/robert-tri-fordel-2014.jpg",
+			"title": "Tri til fordel for børn, 50 km, 2014",
+			"data": {
+				"date": "20140609T0900",
+				"description": "Tri til fordel for børn. 500 m svøm, 40 km cyking og ca 9 km løb. T1 + cykling sået sammen - skrevet 2 minutter ind her. Svømning foregik indendørs. Lidt overrasket over, hvor lemfældigt distancerne var opmålt. Det gør jo ikke noget egentligt, men igen - så er jeg da så kompetitiv, at det alligevel betyder noget. Løbet skulle være 10 , men var ca 9 - så meget tager mit ur ikke fejl.<br/><br />Kunne jeg finde på, at tage det igen? Jada.",
+				"swim": "02:20",
+				"t1": "02:00",
+				"ride": 32.2,
+				"t2": "01:25",
+				"run": "04:35",
+				"resultLink": "https://app.lap.io/event/2014-triatlon-til-fordel-for-boern-20/result/518680",
+				"officialTime": "2:05:27"
+			}
+		},
+		{
+			"name": "kmd_4184",
+			"image": "img/kmd-4-18-4-2013.jpg",
+			"title": "4:18:4 København 2013",
+			"data": {
+				"date": "20130823T1800",
+				"description": "KMD 4:18:4 i København. Allerførste triathlon.<br /><br />",
+				"swim": "02:18",
+				"t1": "03:08",
+				"ride": 35.26,
+				"t2": "01:56",
+				"run": "04:33",
+				"resultLink": "http://live.ultimate.dk/desktop/front/?eventid=1663&pid=10482",
+				"officialTime": "01:03:03"
+			}
+		}
+];

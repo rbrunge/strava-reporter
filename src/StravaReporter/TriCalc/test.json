@@ -1,0 +1,58 @@
+var previousResults = [
+		{
+			"name": "Robert_20140803T0750",
+			"image": "img/robert.jpg",
+			"title": "CPH:TRI 2014",
+			"data": {
+				"date": "20140803T0750",
+				"description": "CPH:TRI 2014, half distance",
+				"swim": "02:07",
+				"t1": "01:55",
+				"ride": 33.16,
+				"t2": "01:31",
+				"run": "05:25"
+			}
+		},
+		{
+			"name": "Robert_20140706T1000",
+			"image": "img/robert.jpg",
+			"title": "Kanaltri 2014",
+			"data": {
+				"date": "20140706T1000",
+				"description": "Olympisk Kanaltri 2014, t1 + cykling + t2 slået sammen",
+				"swim": "02:11",
+				"t1": "02:50",
+				"ride": 33.90,
+				"t2": "02:00",
+				"run": "04:44"
+			}
+		},
+		{
+			"name": "Robert_20140609T0900",
+			"image": "img/robert.jpg",
+			"title": "Tri til fordel for børn, 50 km, 2014",
+			"data": {
+				"date": "20140609T0900",
+				"description": "Tri til fordel for børn. 500 m svøm, 40 km cyking og ca 9 km løb. T1 + cykling sået sammen - skrevet 2 minutter ind her",
+				"swim": "02:20",
+				"t1": "02:00",
+				"ride": 32.2,
+				"t2": "01:25",
+				"run": "04:35"
+			}
+		},
+		{
+			"name": "kmd_4184",
+			"image": "img/robert.jpg",
+			"title": "4:18:4 København 2013",
+			"data": {
+				"date": "20130823T1800",
+				"description": "KMD 4:18:4 i København. Allerførste triathlon.",
+				"swim": "02:18",
+				"t1": "03:08",
+				"ride": 35.26,
+				"t2": "01:56",
+				"run": "04:33"
+			}
+		}
+];

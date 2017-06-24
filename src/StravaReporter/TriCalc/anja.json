@@ -1,0 +1,19 @@
+var previousResults = [
+		{
+			"name": "Anja_20140822T1800",
+			"image": "img/anja_kmd_4_18_4.png",
+			"title": "KMD 4:18:4 København",
+			"data": {
+				"date": "20140822T1800",
+				"description": "Anjas første triatlon! KMD 4:18:4 - gennemført i godt humør.",
+				"swim": "02:31",
+				"t1": "05:05",
+				"ride": 32.59,
+				"t2": "02:23",
+				"run": "05:43",
+				"resultLink": "http://live.ultimate.dk/desktop/front/?eventid=2138&pid=11395",
+				"officialTime": "01:13:27"
+			}
+		}
+];
+

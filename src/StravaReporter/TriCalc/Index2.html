@@ -1,0 +1,259 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Triathlon Race Time Explorer - helps you calculate your speeds/paces for swim, ride and run">
+    <meta name="keywords" content="tri triathlon calculator race time">
+    <meta name="author" content="Robert Runge">
+
+    <title>Triathlon Race Time Explorer</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/slider.css" rel="stylesheet">
+    <link href="css/cover.css" rel="stylesheet">
+
+    <link rel="icon"
+          type="image/png"
+          href="favicon.png">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Favicons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+</head>
+
+
+<body>
+    <div class="hide">
+        <ul>
+            <li id="calculator" class="list-group-item-2">
+                <h1 data-bind="text: currentPresetName"></h1>
+                <span class="pull-right"><a href="#" data-bind="click: toggleHelp">Help</a></span>
+                <p class="lead"></p>
+                <div class="row" style="margin: 5px; background-color: #333; opacity: 1.00;">
+                    <div class="col-md-4 ">
+                        <h2>Swim</h2>
+                        <div class="text-center center" data-bind="text: swimPaceFormatted(), valueUpdate: 'afterkeydown'"></div>
+                        <div class="row">
+                            <i class="glyphicon glyphicon-minus-sign" data-bind="click: swimChange(swimPace, -1)"></i>
+                            <input id="swim-pace-slider" type="text" data-bind="sliderValue: swimPace" data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show">
+                            <i class="glyphicon glyphicon-plus-sign" data-bind="click: swimChange(swimPace, 1)"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h2>Ride</h2>
+                        <div class="text-center center" data-bind="text: rideSpeedFormatted, valueUpdate: 'afterkeydown'"></div>
+                        <div class="row">
+                            <i class="glyphicon glyphicon-minus-sign" data-bind="click: swimChange(rideSpeed, -1)"></i>
+                            <input id="ride-speed-slider" type="text" data-bind="sliderValue: rideSpeed" data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show">
+                            <i class="glyphicon glyphicon-plus-sign" data-bind="click: swimChange(rideSpeed, 1)"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <h2>Run</h2>
+                        <div class="text-center center" data-bind="text: runPaceFormatted(), valueUpdate: 'afterkeydown'"></div>
+                        <div class="row">
+                            <i class="glyphicon glyphicon-minus-sign" data-bind="click: swimChange(runPace, -1)"></i>
+                            <input id="run-pace-slider" type="text" data-bind="sliderValue: runPace" data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show">
+                            <i class="glyphicon glyphicon-plus-sign" data-bind="click: swimChange(runPace, 1)"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin: 5px; background-color: #333; opacity: 1.00;">
+                    <div id="img-drop" class="col-md-2"></div>
+                    <div class="col-md-4 ">
+                        <h2>T1</h2>
+                        <div class="text-center center" data-bind="hmsValue: getTransitionTimeOne(), valueUpdate: 'afterkeydown'"></div>
+                        <div class="row">
+                            <i class="glyphicon glyphicon-minus-sign" data-bind="click: swimChange(transitionOneIndex, -1)"></i>
+                            <input id="transition-one-index" type="text" data-bind="sliderValue: transitionOneIndex" data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show">
+                            <i class="glyphicon glyphicon-plus-sign" data-bind="click: swimChange(transitionOneIndex, 1)"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-4 ">
+                        <h2>T2</h2>
+                        <div class="text-center center" data-bind="hmsValue: getTransitionTimeTwo(), valueUpdate: 'afterkeydown'"></div>
+                        <div class="row">
+                            <i class="glyphicon glyphicon-minus-sign" data-bind="click: swimChange(transitionTwoIndex, -1)"></i>
+                            <input id="transition-two-index" type="text" data-bind="sliderValue: transitionTwoIndex" data-slider-step="1" data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show">
+                            <i class="glyphicon glyphicon-plus-sign" data-bind="click: swimChange(transitionTwoIndex, 1)"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <div class="row">
+                        <div class="col-md-2 text-left"><strong>Distance</strong></div>
+                        <div class="col-md-10 visible-md">
+                            <div class="col-md-2 text-right"><strong>Swim</strong></div>
+                            <div class="col-md-2 text-right"><strong>T1</strong></div>
+                            <div class="col-md-2 text-right"><strong>Ride</strong></div>
+                            <div class="col-md-2 text-right"><strong>T2</strong></div>
+                            <div class="col-md-2 text-right"><strong>Run</strong></div>
+                            <div class="col-md-2 text-right"><strong>Total</strong></div>
+                        </div>
+                    </div>
+                    <!-- ko foreach: distances -->
+                    <div class="row">
+                        <div class="row-line col-md-2 text-left" data-bind="text: name"></div>
+                        <div class="col-md-10 row-line">
+                            <div class="col-md-2 text-right">
+                                <div class="hidden-md col-xs-9 text-right"><strong>Swim</strong></div>
+                                <div data-bind="hmsValue: $root.getSwimInSeconds(distances.swim)">&nbsp;</div>
+                                <div class="font-not-so" data-bind="text: $root.getPercentage(distances.swim, distances.ride, distances.run, 'swim')">&nbsp;</div>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <div class="hidden-md col-xs-9 text-right"><strong>T1</strong></div>
+                                <div data-bind="hmsValue: $root.getTransitionTimeOne()">&nbsp;</div>
+                                <div class="font-not-so" data-bind="text: $root.getPercentage(distances.swim, distances.ride, distances.run, 't1')">&nbsp;</div>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <div class="hidden-md col-xs-9 text-right"><strong>Ride</strong></div>
+                                <div data-bind="hmsValue: $root.getRideInSeconds(distances.ride)">&nbsp;</div>
+                                <div class="font-not-so" data-bind="text: $root.getPercentage(distances.swim, distances.ride, distances.run, 'ride')">&nbsp;</div>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <div class="hidden-md col-xs-9 text-right"><strong>T2</strong></div>
+                                <div data-bind="hmsValue: $root.getTransitionTimeTwo()">&nbsp;</div>
+                                <div class="font-not-so" data-bind="text: $root.getPercentage(distances.swim, distances.ride, distances.run, 't2')">&nbsp;</div>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <div class="hidden-md col-xs-9 text-right"><strong>Run</strong></div>
+                                <div data-bind="hmsValue: $root.getRunInSeconds(distances.run)">&nbsp;</div>
+                                <div class="font-not-so" data-bind="text: $root.getPercentage(distances.swim, distances.ride, distances.run, 'run')">&nbsp;</div>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <div class="hidden-md col-xs-9 text-right"><strong>Total</strong></div>
+                                <div data-bind="hmsValue: $root.calculateTotal(distances.swim, distances.ride,
+    distances.run)">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </li><!-- END Calculator -->
+
+        </ul>
+    </div>
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+            <div class="cover-container container">
+                <div class="inner cover">
+                    <div class="info alert-info" style="display: none" id="help">
+                        <h2>Help</h2>
+                        <div>
+                            This tool tells the final time on different distances based
+                            on your input.
+                            <br />
+                            Robert Runge, June 2014.<br />
+
+                            <br />
+                            <button class="btn btn-primary" data-bind="click: toggleHelp">Got it</button>
+                            <br />
+                            <br />
+                        </div>
+                    </div>
+
+                    <ul class="list-group" class="unstyled">
+                        <li class="list-group-item">
+                            <h3>Log for Robert Runge</h3>
+                        </li>
+                        <!-- ko foreach: presets -->
+                        <li class="list-group-item" data-bind="click: $root.onClickPreset">
+                            <div class="row cursor-pointer list-fancy-stuff">
+                                <div class="col-md-2">
+                                    <img class="img-person img-circle" data-bind="attr: { src: image }" />
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="row text-right">
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-xs-offset-4 col-xs-2 col-md-offset-0 col-md-12">Swim</div>
+                                                <div class="col-xs-2 col-md-12">
+                                                    <strong data-bind="text: $data.data.swim"></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-xs-offset-4 col-xs-2 col-md-offset-0 col-md-12">T1</div>
+                                                <div class="col-xs-2 col-md-12">
+                                                    <strong data-bind="text: $data.data.t1"></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-xs-offset-4 col-xs-2 col-md-offset-0 col-md-12">Ride</div>
+                                                <div class="col-xs-2 col-md-12">
+                                                    <strong class="text-center" data-bind="text: $data.data.ride"></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-xs-offset-4 col-xs-2 col-md-offset-0 col-md-12">T2</div>
+                                                <div class="col-xs-2 col-md-12">
+                                                    <strong data-bind="text: $data.data.t2"></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="row">
+                                                <div class="col-xs-offset-4 col-xs-2 col-md-offset-0 col-md-12">Run</div>
+                                                <div class="col-xs-2 col-md-12">
+                                                    <strong data-bind="text: $data.data.run"></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 text-left" data-bind="dateValue: data.date">
+                                </div>
+                                <div class="col-md-10 text-left">
+                                    <div class="row">
+                                        <strong data-bind="html: title"></strong>
+                                    </div>
+                                    <div class="row" data-bind="html: data.description">
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- /ko -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="//ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.7.2.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//code.jquery.com/color/jquery.color-2.1.2.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/langs.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/lang/da.min.js"></script>
+
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-slider.js"></script>
+
+    <script src="robert.json"></script>
+    <script src="js/tricalc.js"></script>
+
+</body>
+</html>

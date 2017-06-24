@@ -1,0 +1,58 @@
+var previousResults = [
+		{
+			"name": "Robert_20140803T0750",
+			"image": "img/robert.jpg",
+			"title": "CPH:TRI 2014, half distance",
+			"data": {
+				"date": "20140803T0750",
+				"description": "Min første halve jernmand. Planlagt løbetempo omkring 4:45 min/km, men endte med at være 5:30+. Det skyldes nok en kombination af, at jeg brugte for meget energi på cyklen, og så det faktum, at solen bagte fra en skyfri himmel. Lidt det samme som skete under kanaltri.<br /><br />Officiel tid: 5:20:47",
+				"swim": "02:07",
+				"t1": "01:55",
+				"ride": 33.16,
+				"t2": "01:31",
+				"run": "05:25"
+			}
+		},
+		{
+			"name": "Robert_20140706T1000",
+			"image": "img/robert.jpg",
+			"title": "Kanaltri 2014, olympisk distance",
+			"data": {
+				"date": "20140706T1000",
+				"description": "Tiderne for t1 + cykling + t2 slået sammen i resultatlisten. Det var uhyggeligt varmt at løbe. Hele dagen havde solen skinnet fra en skyfri himmel, hvilket kunne mærkes til sidst. Efter 7,5 km vendepunktet måtte jeg ned og gå. Og det endda flere gange - jeg var lidt ophedet, og ville ikke tage nogen chancer. Puha - løb i sol er tough.<br /><br />Officiel tid: 2:35:44",
+				"swim": "02:11",
+				"t1": "02:50",
+				"ride": 33.90,
+				"t2": "02:00",
+				"run": "04:44"
+			}
+		},
+		{
+			"name": "Robert_20140609T0900",
+			"image": "img/robert.jpg",
+			"title": "Tri til fordel for børn, 50 km, 2014",
+			"data": {
+				"date": "20140609T0900",
+				"description": "Tri til fordel for børn. 500 m svøm, 40 km cyking og ca 9 km løb. T1 + cykling sået sammen - skrevet 2 minutter ind her. Svømning foregik indendørs. Lidt overrasket over, hvor lemfældigt distancerne var opmålt. Det gør jo ikke noget egentligt, men igen - så er jeg da så kompetitiv, at det alligevel betyder noget. Løbet skulle være 10 , men var ca 9 - så meget tager mit ur ikke fejl.<br/><br />Kunne jeg finde på, at tage det igen? Jada.<br /><br />Officiel tid: 2:05:27",
+				"swim": "02:20",
+				"t1": "02:00",
+				"ride": 32.2,
+				"t2": "01:25",
+				"run": "04:35"
+			}
+		},
+		{
+			"name": "kmd_4184",
+			"image": "img/robert.jpg",
+			"title": "4:18:4 København 2013",
+			"data": {
+				"date": "20130823T1800",
+				"description": "KMD 4:18:4 i København. Allerførste triathlon.<br /><br />Officiel tid: 01:03:03 ",
+				"swim": "02:18",
+				"t1": "03:08",
+				"ride": 35.26,
+				"t2": "01:56",
+				"run": "04:33"
+			}
+		}
+];
