@@ -25,6 +25,7 @@ namespace StravaReporter.Services
 
         public async Task<Activity> GetLatestAsync()
         {
+            if (_stravaConnector == null) throw new ArgumentNullException(nameof(_stravaConnector));
             var latestJson = await _stravaConnector.GetDataAsync(Constants.ActivityLastestSummaryPartUrl);
             var latest = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<ActivitySummary>>(latestJson));
 

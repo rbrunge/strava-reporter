@@ -64,7 +64,7 @@ namespace StravaReporter
             services.AddTransient<IAccessTokenProvider, HttpContextAccessTokenProvider>();
             services.AddTransient<IStravaConnector, StravaConnector>();
             services.AddTransient<IStravaManager, StravaManager>();
-            services.AddTransient<ICacheRepository, CacheRepository>();
+            services.AddTransient<ICacheRepository, DocumentActivityRepository>();
 
 
             services.AddSingleton<IElasticClient>(

@@ -1,34 +1,35 @@
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using StravaReporter.Models.Strava;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using StravaReporter.Models.Strava;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using StravaReporter.Repositories;
 
 namespace StravaReporter.Services
 {
 
     public class StravaConnector : IStravaConnector
     {
-        private readonly IAccessTokenProvider _tokenProvider;
-        public StravaConnector(IAccessTokenProvider tokenProvider)
+        private readonly IActivityRepository _activityRepository;
+        public StravaConnector(IActivityRepository activityRepository)
         {
-            _tokenProvider = tokenProvider;
+            _activityRepository = activityRepository;
         }
 
-        public async Task<string> GetDataAsync(string url)
+
+
+        private T ReadThrough<T>(Func<Task<T>> cache, Func<Task<T>> remote) where T : class
         {
-            using (var client = new HttpClient())
+            T t = (T)((object)cache().Result);
+            if (t == null)
             {
-                client.BaseAddress = Constants.ApiBaseUrl;
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _tokenProvider.Token);
-                var json = await client.GetStringAsync(url);
-                return json;
+                t = remote().Result;
             }
+            return t;
         }
+
     }
 
 }

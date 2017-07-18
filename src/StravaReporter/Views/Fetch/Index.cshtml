@@ -1,0 +1,22 @@
+﻿@model StravaReporter.Models.FetchViewModel
+
+@{
+    if (Model == null) { throw new ArgumentNullException(nameof(Model)); }
+}
+<div>
+    <form method="post">
+        <div class="form-group row">
+            <label for="example-datetime-local-input" class="col-4 col-form-label">
+                @Html.DisplayNameFor(m => m.StartDate)
+            </label>
+            <div class="col-6">
+                <input class="form-control"
+                       type="date"
+                       value="@Model.StartDate.ToString("yyyy-MM-dd")"
+                       id="example-datetime-local-input"
+                       name="@Html.NameFor(m => m.StartDate)" />
+            </div>
+        </div>
+        <button type="submit">Test</button>
+    </form>
+</div>
