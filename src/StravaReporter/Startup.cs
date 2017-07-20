@@ -14,6 +14,7 @@ using Nest;
 using System;
 using System.IO;
 using Microsoft.Extensions.FileProviders;
+using StravaReporter.Integration;
 
 namespace StravaReporter
 {
@@ -62,9 +63,9 @@ namespace StravaReporter
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<IAccessTokenProvider, HttpContextAccessTokenProvider>();
-            services.AddTransient<IStravaConnector, StravaConnector>();
-            services.AddTransient<IStravaManager, StravaManager>();
-            services.AddTransient<ICacheRepository, DocumentActivityRepository>();
+            services.AddTransient<IActivityRepository, DocumentActivityRepository>();
+            services.AddTransient<IActivityService, ActivityService>();
+            services.AddTransient<IStravaIntegrator, StravaIntegrator>();
 
 
             services.AddSingleton<IElasticClient>(

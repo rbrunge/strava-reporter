@@ -18,18 +18,12 @@ namespace StravaReporter.Repositories
 
         public override Task<ActivitySummary> GetActivitySummaryAsync(long id)
         {
-            var activity = ReadThrough<Activity>(
-                cache: async () => await _cacheRepository.GetActivityAsync(id),
-                remote: async () =>
-                {
-                    lock (CacheLockObject)
-                    {
-                        return await _documentActivityRepository.GetActivitySummaryAsync(id)
+            var activity = ReadThrough<ActivitySummary>(
+                cache: async () => await _documentActivityRepository.GetActivitySummaryAsync(id),
+                remote: async () => await _documentActivityRepository.GetActivitySummaryAsync(id)
+            );
 
-                    }
-                });
-
-            return activity;
+            return Task.FromResult(activity);
         }
 
         private T ReadThrough<T>(Func<Task<T>> cache, Func<Task<T>> remote) where T : class

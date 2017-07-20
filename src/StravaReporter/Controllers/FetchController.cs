@@ -14,11 +14,6 @@ namespace StravaReporter.Controllers
     [Authorize]
     public class FetchController : Controller
     {
-        private IStravaConnector _stravaConnector;
-        public FetchController(IStravaConnector stravaConnector)
-        {
-            _stravaConnector = stravaConnector;
-        }
 
         // GET: /<controller>/
         public IActionResult Index()

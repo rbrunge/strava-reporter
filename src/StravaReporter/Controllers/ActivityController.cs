@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -13,18 +14,19 @@ namespace StravaReporter.Controllers
     public class ActivityController : Controller
     {
         private readonly ILogger _logger;
-        private readonly IStravaManager _stravaManager;
+        private readonly IActivityService _activityService;
 
-        public ActivityController(ILoggerFactory loggerFactory, IStravaManager stravaManager)
+        public ActivityController(ILoggerFactory loggerFactory, IActivityService activityService)
         {
-            _stravaManager = stravaManager;
+            _activityService = activityService;
         }
 
         public async Task<IActionResult> Index()
         {
-            // var token = User.Claims.FirstOrDefault(n => n.Type == Constants.AccessToken).Value;
+            if (_activityService == null) throw new ArgumentNullException(nameof(_activityService));
             var model = new ActivityAggregationViewModel();
-            model.Activity = await _stravaManager.GetLatestAsync();
+            var latestAsync = _activityService.GetLatestAsync();
+            if (latestAsync != null) model.Activity = await latestAsync;
             return View(model);
         }
     }

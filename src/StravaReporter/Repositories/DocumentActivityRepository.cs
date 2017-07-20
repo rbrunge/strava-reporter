@@ -55,42 +55,5 @@ namespace StravaReporter.Repositories
             return response.Source;
         }
 
-        private async Task<IEnumerable<Lap>> GetLapsAsync(long activityId)
-        {
-            IEnumerable<Lap> laps;
-
-            var json = await GetDataAsync(string.Format(Constants.LapsPartUrl, activityId));
-            laps = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<Lap>>(json));
-
-            return laps;
-        }
-
-        public async Task<Activity> GetLatestAsync()
-        {
-            var latestJson = await GetDataAsync(Constants.ActivityLastestSummaryPartUrl);
-            var latest = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<ActivitySummary>>(latestJson));
-
-            await CreateOrUpdateActivitySummaryAsync(latest);
-
-            var id = latest.OrderByDescending(m => m.StartDate).FirstOrDefault().Id;
-            var json = await GetDataAsync(string.Format(Constants.ActivityPartUrl, id));
-            var activity = Task.Factory.StartNew(() => JsonConvert.DeserializeObject<Activity>(json));
-            activity.Result.Laps = await GetLapsAsync(activity.Id);
-            await CreateOrUpdateActivityAsync(new List<Activity> { activity.Result });
-
-            return await activity;
-        }
-
-        private async Task<string> GetDataAsync(string url)
-        {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = Constants.ApiBaseUrl;
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + _tokenProvider.Token);
-                var json = await client.GetStringAsync(url);
-                return json;
-            }
-        }
-
     }
 }
