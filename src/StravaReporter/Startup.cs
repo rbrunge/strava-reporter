@@ -12,9 +12,8 @@ using StravaReporter.Repositories;
 using StravaReporter.Models;
 using Nest;
 using System;
-using System.IO;
-using Microsoft.Extensions.FileProviders;
 using StravaReporter.Integration;
+using StravaReporter.Models.ActivityViewModels;
 
 namespace StravaReporter
 {
@@ -22,6 +21,8 @@ namespace StravaReporter
     {
         public Startup(IHostingEnvironment env)
         {
+            if (env == null) throw new ArgumentNullException(nameof(env));
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -54,6 +55,7 @@ namespace StravaReporter
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddAuthentication(options => options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
+            services.Configure<AppKeyConfig>(Configuration.GetSection("AppKeys"));
             services.AddMvc(options =>
             {
                 // options.Filters.Add(new RequireHttpsAttribute());
@@ -66,11 +68,9 @@ namespace StravaReporter
             services.AddTransient<IActivityRepository, DocumentActivityRepository>();
             services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IStravaIntegrator, StravaIntegrator>();
-
-
+            services.AddTransient<IActivityAggregationViewModel, ActivityAggregationViewModel>();
             services.AddSingleton<IElasticClient>(
                 new ElasticClient(new Uri(Configuration["RemoteRepository:Elasticsearch:FullAccessUrl"])));
-           //  services.AddTransient<IRemoteRepository, RemoteRepository>();
             services.Configure<ElasticsearchSettings>(
                 m => m.FullAccessUrl = Configuration.GetValue<string>("RemoteRepository:Elasticsearch:FullAccessUrl"));
 

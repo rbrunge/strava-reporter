@@ -14,14 +14,11 @@ namespace StravaReporter.Integration
 
     public class StravaIntegrator : IStravaIntegrator
     {
-        public class Constants
+        private static class Constants
         {
-            public const string AccessToken = "urn:strava:accesstoken";
             public static readonly Uri ApiBaseUrl = new Uri("https://www.strava.com/api/v3/");
-            public static readonly Uri WebBaseUrl = new Uri("https://www.strava.com/");
             public const string ActivityLastestSummaryPartUrl = "athlete/activities?per_page=1&page=1";
             public const string ActivityPartUrl = "activities/{0}";
-            public const string FlyByUrl = "http://labs.strava.com/flyby/viewer/#{0}";
             public const string LapsPartUrl = "activities/{0}/laps";
         }
 
@@ -34,13 +31,24 @@ namespace StravaReporter.Integration
 
         public async Task<Activity> GetLatestActivityAsync()
         {
+            if (Task.Factory == null) throw new ArgumentNullException(nameof(Task.Factory));
             var latestJson = await GetDataAsync(Constants.ActivityLastestSummaryPartUrl);
-            var latest = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<ActivitySummary>>(latestJson));
+            var startNew = Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<ActivitySummary>>(latestJson));
+            if (startNew == null) return null;
+
+            var latest = await startNew;
             var id = latest.OrderByDescending(m => m.StartDate).FirstOrDefault().Id;
+
             var json = await GetDataAsync(string.Format(Constants.ActivityPartUrl, id));
-            var activity = Task.Factory.StartNew(() => JsonConvert.DeserializeObject<Activity>(json));
-            activity.Result.Laps = await GetLapsAsync(activity.Id);
-            return await activity;
+            var task = Task.Factory.StartNew(() => JsonConvert.DeserializeObject<Activity>(json));
+            if (task == null) return null;
+
+            var activity = await task;
+            if (activity != null)
+            {
+                activity.Laps = await GetLapsAsync(activity.Id);
+            }
+            return activity;
         }
 
         private async Task<IEnumerable<Lap>> GetLapsAsync(long activityId)
@@ -49,7 +57,7 @@ namespace StravaReporter.Integration
 
             var json = await GetDataAsync(string.Format(Constants.LapsPartUrl, activityId));
             laps = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<IEnumerable<Lap>>(json));
-
+            
             return laps;
         }
 

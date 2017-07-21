@@ -15,19 +15,23 @@ namespace StravaReporter.Controllers
     {
         private readonly ILogger _logger;
         private readonly IActivityService _activityService;
+        private readonly IActivityAggregationViewModel _activityAggregationViewModel;
 
-        public ActivityController(ILoggerFactory loggerFactory, IActivityService activityService)
+        public ActivityController(
+            ILoggerFactory loggerFactory, 
+            IActivityService activityService, 
+            IActivityAggregationViewModel activityAggregationViewModel)
         {
             _activityService = activityService;
+            _activityAggregationViewModel = activityAggregationViewModel;
         }
 
         public async Task<IActionResult> Index()
         {
             if (_activityService == null) throw new ArgumentNullException(nameof(_activityService));
-            var model = new ActivityAggregationViewModel();
             var latestAsync = _activityService.GetLatestAsync();
-            if (latestAsync != null) model.Activity = await latestAsync;
-            return View(model);
+            if (latestAsync != null) _activityAggregationViewModel.Activity = await latestAsync;
+            return View(_activityAggregationViewModel);
         }
     }
 }

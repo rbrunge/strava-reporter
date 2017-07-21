@@ -1,5 +1,5 @@
 ﻿@using StravaReporter.Models.Strava
-@model StravaReporter.Models.ActivityViewModels.ActivityAggregationViewModel
+@model StravaReporter.Models.ActivityViewModels.IActivityAggregationViewModel
 
 @{
     if (Model?.Activity == null) { throw new ArgumentNullException(nameof(Model.Activity)); }
@@ -16,15 +16,15 @@
  }</style>
 <div class="container">
     <div class="alert alert-info">
-        <h3><a href="@string.Format(Constants.WebBaseUrl + Constants.ActivityPartUrl, Model?.Activity.Id)" target="_blank" nofollow rel="nofollow">@Model?.Activity.Name</a></h3>
+        <h3><a href="@Model.StravaActivityLink" target="_blank" nofollow rel="nofollow">@Model?.Activity.Name</a></h3>
         Showing data from latest activity
         <p class="lead">
             @Model?.Activity.Description
         </p>
         <div>
             Links:
-            <a href="@string.Format(Constants.WebBaseUrl + Constants.ActivityPartUrl, Model?.Activity.Id)" target="_blank" nofollow rel="nofollow">Strava ...</a>
-            <a href="@string.Format(Constants.FlyByUrl, Model?.Activity.Id)" target="_blank" nofollow rel="nofollow">Flybys ...</a>
+            <a href="@Model.StravaActivityLink" target="_blank" nofollow rel="nofollow">Strava ...</a>
+            <a href="@Model.StravaUrlFlyby" target="_blank" nofollow rel="nofollow">Flybys ...</a>
         </div>
     </div>
 </div>
@@ -57,15 +57,15 @@
                 </div>
             </div>
         }
-        @if (Model?.Activity.MovingTime != null)
+        @if ((Model?.Activity.HasHeartrate ?? false) && Model.Activity.AverageHeartrate > 0.0)
         {
             <div class="col-xs-6 col-md-3">
                 <div class="panel status @(informationOptions[i++%(informationOptions.Length)])">
                     <div class="panel-heading">
-                        <h2 class="panel-title text-center">@Model?.Pace.FormatTime((double)Model?.Activity?.MovingTime)</h2>
+                        <h2 class="panel-title text-center">@Model?.Activity.AverageHeartrate.ToString("N0")</h2>
                     </div>
                     <div class="panel-body text-center">
-                        <strong>Duration</strong>
+                        <strong>Avg heartrate</strong>
                     </div>
                 </div>
             </div>
@@ -79,6 +79,19 @@
                     </div>
                     <div class="panel-body text-center">
                         <strong>Pace</strong>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model?.Activity.MovingTime != null)
+        {
+            <div class="col-xs-6 col-md-3">
+                <div class="panel status @(informationOptions[i++%(informationOptions.Length)])">
+                    <div class="panel-heading">
+                        <h2 class="panel-title text-center">@Model?.Pace.FormatTime((double)Model?.Activity?.MovingTime)</h2>
+                    </div>
+                    <div class="panel-body text-center">
+                        <strong>Duration</strong>
                     </div>
                 </div>
             </div>
@@ -115,19 +128,6 @@
                     </div>
                     <div class="panel-body text-center">
                         <strong>City</strong>
-                    </div>
-                </div>
-            </div>
-        }
-        @if ((Model?.Activity.HasHeartrate ?? false) && Model.Activity.AverageHeartrate > 0.0)
-        {
-            <div class="col-xs-6 col-md-3">
-                <div class="panel status @(informationOptions[i++%(informationOptions.Length)])">
-                    <div class="panel-heading">
-                        <h2 class="panel-title text-center">@Model?.Activity.AverageHeartrate.ToString("N0")</h2>
-                    </div>
-                    <div class="panel-body text-center">
-                        <strong>Avg heartrate</strong>
                     </div>
                 </div>
             </div>
