@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StravaReporter.Services;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Authentication;
@@ -31,6 +30,7 @@ namespace StravaReporter
             if (env.IsDevelopment()) 
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
+                // builder.AddUserSecrets<Startup>();
                 builder.AddUserSecrets();
 
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
@@ -43,7 +43,8 @@ namespace StravaReporter
             }
 
             builder.AddEnvironmentVariables();
-            Configuration = builder.Build();
+            if (builder != null)
+                Configuration = builder.Build();
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -54,17 +55,34 @@ namespace StravaReporter
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-            services.AddAuthentication(options => options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
+            services.AddAuthentication(options =>
+            {
+                if (options != null)
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            });
+            if (Configuration == null) return;
+
             services.Configure<AppKeyConfig>(Configuration.GetSection("AppKeys"));
             services.AddMvc(options =>
             {
                 // options.Filters.Add(new RequireHttpsAttribute());
             });
 
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                if (options == null) throw new ArgumentNullException(nameof(options));
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.CookieHttpOnly = true;
+            });
+
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<IAccessTokenProvider, HttpContextAccessTokenProvider>();
+            services.AddTransient<IUserSessionStateManager, UserSessionStateManager>();
             services.AddTransient<IActivityRepository, DocumentActivityRepository>();
             services.AddTransient<IActivityService, ActivityService>();
             services.AddTransient<IStravaIntegrator, StravaIntegrator>();
@@ -72,21 +90,34 @@ namespace StravaReporter
             services.AddSingleton<IElasticClient>(
                 new ElasticClient(new Uri(Configuration["RemoteRepository:Elasticsearch:FullAccessUrl"])));
             services.Configure<ElasticsearchSettings>(
-                m => m.FullAccessUrl = Configuration.GetValue<string>("RemoteRepository:Elasticsearch:FullAccessUrl"));
+                m =>
+                {
+                    if (m == null) throw new ArgumentNullException(nameof(m));
+                    m.FullAccessUrl = Configuration.GetValue<string>("RemoteRepository:Elasticsearch:FullAccessUrl");
+                });
 
-            services.AddTransient<ClaimsPrincipal>(
-                    s => s.GetService<IHttpContextAccessor>().HttpContext.User);
+            services.AddTransient(
+                    s =>
+                    {
+                        var httpContextAccessor = s.GetService<IHttpContextAccessor>();
+                        if (httpContextAccessor?.HttpContext == null)
+                            throw new ArgumentNullException(nameof(httpContextAccessor));
 
-            services.Configure<IISOptions>(options => { options.ForwardWindowsAuthentication = true; });
+                        return httpContextAccessor.HttpContext.User;
+                    });
+
+            services.Configure<IISOptions>(options =>
+            {
+                if (options == null) throw new ArgumentNullException(nameof(options));
+                options.ForwardWindowsAuthentication = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            if (Configuration != null) loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            app.UseApplicationInsightsRequestTelemetry();
 
             if (env.IsDevelopment())
             {
@@ -97,6 +128,8 @@ namespace StravaReporter
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseSession();
 
             // app.UseApplicationInsightsExceptionTelemetry();
 
@@ -123,19 +156,36 @@ namespace StravaReporter
             {
                 builder.Run(async context =>
                 {
+                    if (context?.Authentication == null) throw new ArgumentNullException(nameof(context));
+
                     // Return a challenge to invoke the LinkedIn authentication scheme
-                    await context.Authentication.ChallengeAsync("Strava", properties: new AuthenticationProperties { RedirectUri = context.Request.Query?["ReturnUrl"] ?? "" });
+                    if (context.Request != null)
+                    {
+                        var challengeAsync = 
+                            context.Authentication.ChallengeAsync(
+                                "Strava",
+                                new AuthenticationProperties
+                                {
+                                    RedirectUri = context.Request.Query?["ReturnUrl"] ?? ""
+                                });
+                        if (challengeAsync != null)
+                            await challengeAsync;
+                    }
                 });
             });
             app.Map("/logout", builder =>
             {
                 builder.Run(async context =>
                 {
+                    if (context?.Authentication == null) throw new ArgumentNullException(nameof(context));
+
                     // Sign the user out of the authentication middleware (i.e. it will clear the Auth cookie)
-                    await context.Authentication.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    var signOutAsync = context.Authentication.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    if (signOutAsync != null)
+                        await signOutAsync;
 
                     // Redirect the user to the home page after signing out
-                    context.Response.Redirect("/");
+                    context.Response?.Redirect("/");
                 });
             });
         }

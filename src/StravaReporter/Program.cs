@@ -12,7 +12,7 @@ namespace StravaReporter
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
-                .Build();
+                ?.Build();
 
             host.Run();
         }

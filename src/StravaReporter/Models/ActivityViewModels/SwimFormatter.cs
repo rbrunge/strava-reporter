@@ -2,7 +2,7 @@
 
 namespace StravaReporter.Models.ActivityViewModels
 {
-    public class SwinFormatter : ActivityFormatter
+    public class SwimFormatter : ActivityFormatter
     {
         public override string Icon { get; } = "/images/icons/swimming.png";
         public override string UnitOfSpeed { get; } = "min/100 m";

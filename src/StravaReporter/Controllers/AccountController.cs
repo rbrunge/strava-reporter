@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using StravaReporter.Models;
-using StravaReporter.Models.AccountViewModels;
 using StravaReporter.Services;
-using StravaReporter.Models.Strava;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -23,14 +15,17 @@ namespace StravaReporter.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        private readonly IUserSessionStateManager _userSessionState;
 
         public AccountController(
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory, 
+            IUserSessionStateManager userSessionState)
         {
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _userSessionState = userSessionState;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -70,7 +65,10 @@ namespace StravaReporter.Controllers
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action("Index", "Activity", new { ReturnUrl = returnUrl });
             var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
-            return Challenge(properties, provider);
+            var challenge = Challenge(properties, provider);
+            _userSessionState.Current.LastFetchDateTime = DateTime.Now;
+            _userSessionState.Current.Test = "Hello";
+            return challenge;
         }
 
         #region Helpers

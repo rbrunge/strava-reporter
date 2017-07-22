@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using StravaReporter.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using StravaReporter.Services;
@@ -13,7 +11,6 @@ namespace StravaReporter.Controllers
     [Authorize]
     public class ActivityController : Controller
     {
-        private readonly ILogger _logger;
         private readonly IActivityService _activityService;
         private readonly IActivityAggregationViewModel _activityAggregationViewModel;
 

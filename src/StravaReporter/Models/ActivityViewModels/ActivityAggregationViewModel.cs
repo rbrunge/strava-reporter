@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.Extensions.Options;
-using Nest;
 using StravaReporter.Models.Strava;
 
 namespace StravaReporter.Models.ActivityViewModels
@@ -23,6 +22,7 @@ namespace StravaReporter.Models.ActivityViewModels
             set
             {
                 _activity = value;
+                if (_activity == null) return;
                 StravaActivityLink =
                     string.Format(_appkeys?.StravaUrlWebbase + _appkeys?.StravaUrlActivityPartUrl, _activity.Id);
                 StravaUrlFlyby = 
@@ -33,11 +33,12 @@ namespace StravaReporter.Models.ActivityViewModels
         public string StravaActivityLink { get; private set; }
         public string StravaUrlFlyby { get; private set; }
 
-        private AppKeyConfig _appkeys;
+        private readonly AppKeyConfig _appkeys;
         private Activity _activity;
 
         public ActivityAggregationViewModel(IOptions<AppKeyConfig> appkeys)
         {
+            if (appkeys == null) throw new ArgumentNullException(nameof(appkeys));
             _appkeys = appkeys.Value;
             if (_appkeys == null) throw new ArgumentException(nameof(_appkeys));
         }
@@ -59,10 +60,10 @@ namespace StravaReporter.Models.ActivityViewModels
                 switch (Activity.Type)
                 {
                     case "Swim":
-                        return new SwinFormatter();
+                        return new SwimFormatter();
                     case "Run":
                         return new RunFormatter();
-                    case "Ride":
+                    //case "Ride":
                     default:
                         return new RideFormatter();
                 }

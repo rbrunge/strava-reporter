@@ -27,7 +27,8 @@ namespace StravaReporter.Controllers
         }
         // GET: /<controller>/
         [HttpPost]
-        public async Task<IActionResult> Index(FetchViewModel model)
+        // public async Task<IActionResult> Index(FetchViewModel model)
+        public IActionResult Index(FetchViewModel model)
         {
             // var v = await _stravaConnector.
 
