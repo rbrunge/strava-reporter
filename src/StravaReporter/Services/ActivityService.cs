@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using StravaReporter.Models.Strava;
 using System.Threading.Tasks;
-using Microsoft.DotNet.Cli.Utils;
-using Newtonsoft.Json;
 using StravaReporter.Integration;
 using StravaReporter.Repositories;
 
